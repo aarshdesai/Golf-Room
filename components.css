@@ -4,6 +4,39 @@
    Import globals.css before this file.
    ============================================================================= */
 
+/* ─── COMPONENT-LEVEL VARIABLES ─────────────────────────────────────────────── */
+/* These are not design tokens — they are component-specific palette values     */
+/* that intentionally live here rather than globals.css.                        */
+:root {
+  /* Bay card gradient palettes (always dark, theme-independent) */
+  --bay-highlands-from:  #1a3a2a;
+  --bay-highlands-to:    #0d2018;
+  --bay-masters-from:    #1e3d1e;
+  --bay-masters-to:      #0f2410;
+  --bay-links-from:      #1a2e3d;
+  --bay-links-to:        #0d1e2e;
+  --bay-augusta-from:    #2d3a1a;
+  --bay-augusta-to:      #1a2410;
+  --bay-pebble-from:     #1a2d3a;
+  --bay-pebble-to:       #0f1e2d;
+  --bay-st-andrews-from: #2a2a1e;
+  --bay-st-andrews-to:   #1a1a10;
+
+  /* Bay filter chip dots (fixed semantic colors per bay) */
+  --dot-highlands:   #2F6B4A;
+  --dot-masters:     #3B6B3B;
+  --dot-links:       #3B5F7A;
+  --dot-augusta:     #6B7A3B;
+  --dot-pebble:      #3B5F7A;
+  --dot-st-andrews:  #7A7A3B;
+
+  /* Membership card dark gradient end-stop */
+  --membership-card-end: #0d3d26;
+
+  /* Pure white for text on always-dark surfaces (bay cards, membership card) */
+  --color-white: #ffffff;
+}
+
 /* ─── BUTTONS ────────────────────────────────────────────────────────────────── */
 
 .btn {
@@ -544,12 +577,12 @@
 }
 
 /* Named bay gradient palettes */
-.bay-card--highlands  { background: linear-gradient(160deg, #1a3a2a 0%, #0d2018 100%); }
-.bay-card--masters    { background: linear-gradient(160deg, #1e3d1e 0%, #0f2410 100%); }
-.bay-card--links      { background: linear-gradient(160deg, #1a2e3d 0%, #0d1e2e 100%); }
-.bay-card--augusta    { background: linear-gradient(160deg, #2d3a1a 0%, #1a2410 100%); }
-.bay-card--pebble     { background: linear-gradient(160deg, #1a2d3a 0%, #0f1e2d 100%); }
-.bay-card--st-andrews { background: linear-gradient(160deg, #2a2a1e 0%, #1a1a10 100%); }
+.bay-card--highlands  { background: linear-gradient(160deg, var(--bay-highlands-from)  0%, var(--bay-highlands-to)  100%); }
+.bay-card--masters    { background: linear-gradient(160deg, var(--bay-masters-from)    0%, var(--bay-masters-to)    100%); }
+.bay-card--links      { background: linear-gradient(160deg, var(--bay-links-from)      0%, var(--bay-links-to)      100%); }
+.bay-card--augusta    { background: linear-gradient(160deg, var(--bay-augusta-from)    0%, var(--bay-augusta-to)    100%); }
+.bay-card--pebble     { background: linear-gradient(160deg, var(--bay-pebble-from)     0%, var(--bay-pebble-to)     100%); }
+.bay-card--st-andrews { background: linear-gradient(160deg, var(--bay-st-andrews-from) 0%, var(--bay-st-andrews-to) 100%); }
 
 .bay-card__number {
   position: absolute;
@@ -573,7 +606,7 @@
   font-family: var(--font-display);
   font-size: var(--text-heading-md);
   font-weight: 400;
-  color: #ffffff;
+  color: var(--color-white);
   letter-spacing: -0.01em;
 }
 
@@ -679,12 +712,12 @@
   border-radius: var(--radius-full);
   flex-shrink: 0;
 }
-.filter-chip__dot--highlands  { background: #2F6B4A; }
-.filter-chip__dot--masters    { background: #3B6B3B; }
-.filter-chip__dot--links      { background: #3B5F7A; }
-.filter-chip__dot--augusta    { background: #6B7A3B; }
-.filter-chip__dot--pebble     { background: #3B5F7A; }
-.filter-chip__dot--st-andrews { background: #7A7A3B; }
+.filter-chip__dot--highlands  { background: var(--dot-highlands); }
+.filter-chip__dot--masters    { background: var(--dot-masters); }
+.filter-chip__dot--links      { background: var(--dot-links); }
+.filter-chip__dot--augusta    { background: var(--dot-augusta); }
+.filter-chip__dot--pebble     { background: var(--dot-pebble); }
+.filter-chip__dot--st-andrews { background: var(--dot-st-andrews); }
 
 /* ─── CALENDAR GRID ──────────────────────────────────────────────────────────── */
 
@@ -1026,7 +1059,7 @@
 /* ─── MEMBERSHIP CARD ────────────────────────────────────────────────────────── */
 
 .membership-card {
-  background: linear-gradient(135deg, var(--color-green-primary) 0%, #0d3d26 100%);
+  background: linear-gradient(135deg, var(--color-green-primary) 0%, var(--membership-card-end) 100%);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
   color: var(--color-text-inverse);
@@ -1061,7 +1094,7 @@
   font-size: var(--text-heading-lg);
   font-weight: 300;
   letter-spacing: -0.01em;
-  color: #fff;
+  color: var(--color-white);
   margin-bottom: var(--space-5);
 }
 
