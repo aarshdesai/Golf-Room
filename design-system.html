@@ -375,9 +375,7 @@
 <body>
 <script>
   (function() {
-    const stored = localStorage.getItem('golf-room-theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (stored === 'dark' || (!stored && prefersDark)) {
+    if (localStorage.getItem('golf-room-theme') === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
   })();
