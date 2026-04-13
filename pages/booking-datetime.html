@@ -476,6 +476,67 @@ nav {
   .bay-chip { flex-shrink: 0; }
   .view-toggle { display: none; }
 }
+
+/* ── Mobile bottom selection bar ── */
+.mob-selection-bar {
+  display: none; /* shown only on mobile */
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 200;
+  background: var(--color-bg-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.10);
+  padding: 14px 20px 22px;
+  transform: translateY(100%);
+  transition: transform 280ms ease;
+}
+.mob-selection-bar.visible { transform: translateY(0); }
+@media (max-width: 1100px) {
+  .mob-selection-bar { display: block; }
+}
+.mob-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.mob-bar-info { display: flex; flex-direction: column; gap: 2px; }
+.mob-bar-slot {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.mob-bar-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+.mob-bar-price {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-gold);
+  white-space: nowrap;
+}
+.mob-bar-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-gold);
+  color: var(--color-text-inverse);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 200ms ease, box-shadow 200ms ease;
+}
+.mob-bar-cta:hover { background: var(--color-gold-light); box-shadow: var(--shadow-glow-gold); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
@@ -818,6 +879,21 @@ nav {
 
 </main>
 
+<!-- Mobile sticky bottom bar — shown on ≤1100px after a time slot is selected -->
+<div class="mob-selection-bar" id="mob-selection-bar" aria-live="polite" aria-label="Selected slot summary">
+  <div class="mob-bar-row">
+    <div class="mob-bar-info">
+      <div class="mob-bar-slot" id="mob-bar-slot">—</div>
+      <div class="mob-bar-meta" id="mob-bar-meta">Select a time slot</div>
+    </div>
+    <div class="mob-bar-price" id="mob-bar-price">$240</div>
+    <a class="mob-bar-cta" href="booking-confirm.html">
+      Continue
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+</div>
+
 <div role="alert" aria-live="polite" aria-atomic="true" id="live-region" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"></div>
 
 <script>
@@ -843,6 +919,10 @@ nav {
   });
 
   /* Click any empty cal-cell to select it */
+  const mobBar      = document.getElementById('mob-selection-bar');
+  const mobBarSlot  = document.getElementById('mob-bar-slot');
+  const mobBarMeta  = document.getElementById('mob-bar-meta');
+
   document.querySelectorAll('.cal-cell').forEach(cell => {
     if (cell.querySelector('.cal-event-span, .cal-event.selected')) return;
     cell.addEventListener('click', () => {
@@ -852,6 +932,14 @@ nav {
       sel.setAttribute('aria-selected', 'true');
       sel.innerHTML = `<div class="cal-event-time">Selected</div><div class="cal-event-name">✓</div>`;
       cell.appendChild(sel);
+
+      /* Show mobile bottom bar with slot info from aria-label */
+      const label = cell.getAttribute('aria-label') || '';
+      const timePart = label.replace(/^(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s*/i, '');
+      const dayPart  = label.match(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun|\w+day)/i)?.[0] || 'Sat, Apr 11';
+      mobBarSlot.textContent = timePart || label;
+      mobBarMeta.textContent = `The Masters Suite · ${dayPart}`;
+      mobBar.classList.add('visible');
     });
   });
 
