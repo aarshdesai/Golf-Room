@@ -395,7 +395,8 @@
     <a href="#typography" class="ds-sidebar__link">Typography</a>
     <a href="#spacing"    class="ds-sidebar__link">Spacing</a>
     <a href="#shadows"    class="ds-sidebar__link">Shadows</a>
-    <a href="#radii"      class="ds-sidebar__link">Border Radii</a>
+    <a href="#radii"       class="ds-sidebar__link">Border Radii</a>
+    <a href="#responsive"  class="ds-sidebar__link">Responsive</a>
 
     <span class="ds-sidebar__section-label">Components</span>
     <a href="#buttons"     class="ds-sidebar__link">Buttons</a>
@@ -631,6 +632,182 @@
           <div class="ds-radius-demo" style="border-radius:var(--radius-full)"></div>
           <div class="ds-radius-token">--radius-full<br>9999px · Pills</div>
         </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         RESPONSIVE
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="responsive">
+      <h2 class="ds-section-title">Responsive</h2>
+      <p class="ds-section-desc">Two breakpoints. Mobile-first within components; the page shell is desktop-first. Always test at both widths before shipping.</p>
+
+      <!-- Breakpoints -->
+      <h3 class="ds-subsection-title">Breakpoints</h3>
+      <div style="display:flex;flex-direction:column;gap:var(--space-3);margin-bottom:var(--space-8);">
+
+        <div style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-5);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:80px;height:44px;background:var(--color-bg-elevated);border-radius:var(--radius-sm);border:1.5px solid var(--color-green-primary);display:flex;align-items:center;justify-content:center;">
+            <svg width="28" height="22" viewBox="0 0 28 22" fill="none"><rect x="1" y="1" width="26" height="16" rx="2" stroke="var(--color-green-primary)" stroke-width="1.5"/><path d="M9 20h10M14 17v3" stroke="var(--color-green-primary)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:var(--text-body-md);font-weight:600;color:var(--color-text-primary);">Desktop</div>
+            <div style="font-family:var(--font-mono);font-size:var(--text-label);color:var(--color-text-secondary);letter-spacing:0.08em;margin-top:2px;">≥ 769px — default layout, no media query needed</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-5);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:80px;height:44px;background:var(--color-bg-elevated);border-radius:var(--radius-sm);border:1.5px solid var(--color-gold);display:flex;align-items:center;justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="4" y="1" width="14" height="20" rx="2" stroke="var(--color-gold)" stroke-width="1.5"/><rect x="7" y="18" width="8" height="1.5" rx=".75" fill="var(--color-gold)"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:var(--text-body-md);font-weight:600;color:var(--color-text-primary);">Tablet</div>
+            <div style="font-family:var(--font-mono);font-size:var(--text-label);color:var(--color-text-secondary);letter-spacing:0.08em;margin-top:2px;"><code style="background:var(--color-bg-elevated);padding:1px 5px;border-radius:var(--radius-sm)">max-width: 768px</code> — sidebar collapses, grid goes 1-col</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-5);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:80px;height:44px;background:var(--color-bg-elevated);border-radius:var(--radius-sm);border:1.5px solid var(--color-text-secondary);display:flex;align-items:center;justify-content:center;">
+            <svg width="14" height="22" viewBox="0 0 14 22" fill="none"><rect x="1" y="1" width="12" height="20" rx="2" stroke="var(--color-text-secondary)" stroke-width="1.5"/><rect x="4" y="18" width="6" height="1.5" rx=".75" fill="var(--color-text-secondary)"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:var(--text-body-md);font-weight:600;color:var(--color-text-primary);">Mobile</div>
+            <div style="font-family:var(--font-mono);font-size:var(--text-label);color:var(--color-text-secondary);letter-spacing:0.08em;margin-top:2px;"><code style="background:var(--color-bg-elevated);padding:1px 5px;border-radius:var(--radius-sm)">max-width: 640px</code> — full stack, full-width CTAs, bottom bar visible</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Media query pattern -->
+      <h3 class="ds-subsection-title">Media Query Pattern</h3>
+      <p class="ds-section-desc" style="margin-bottom:var(--space-4);">Media queries go at the bottom of each CSS module file (or at the end of <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">components.css</code> for global components). Always cascade tablet → mobile.</p>
+      <pre style="background:var(--color-bg-elevated);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-5);font-family:var(--font-mono);font-size:13px;color:var(--color-text-primary);line-height:1.7;overflow-x:auto;margin-bottom:var(--space-8);">/* ─── Tablet ────────────────────────── */
+@media (max-width: 768px) {
+  .page-grid {
+    grid-template-columns: 1fr;  /* collapse sidebar */
+  }
+  .bay-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ─── Mobile ────────────────────────── */
+@media (max-width: 640px) {
+  .bay-card-grid {
+    grid-template-columns: 1fr;  /* single column */
+  }
+  .btn--full-mobile {
+    width: 100%;
+  }
+}</pre>
+
+      <!-- Key rules -->
+      <h3 class="ds-subsection-title">Key Rules</h3>
+      <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+
+        <div style="display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-4);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--color-green-primary);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:600;font-size:var(--text-body-md);color:var(--color-text-primary);margin-bottom:var(--space-1);">Always clear the fixed nav</div>
+            <div style="font-size:var(--text-body-md);color:var(--color-text-secondary);">Every page must set <code style="font-family:var(--font-mono);font-size:12px;background:var(--color-bg-elevated);padding:1px 5px;border-radius:var(--radius-sm)">padding-top: var(--nav-height)</code> (72px) on the page wrapper. Never hardcode this value.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-4);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--color-green-primary);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:600;font-size:var(--text-body-md);color:var(--color-text-primary);margin-bottom:var(--space-1);">No horizontal scroll on mobile</div>
+            <div style="font-size:var(--text-body-md);color:var(--color-text-secondary);">No element may overflow its container on a 375px viewport. Use <code style="font-family:var(--font-mono);font-size:12px;background:var(--color-bg-elevated);padding:1px 5px;border-radius:var(--radius-sm)">overflow-x: auto</code> on scroll containers (calendar, tables) rather than letting them bust out.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-4);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--color-green-primary);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:600;font-size:var(--text-body-md);color:var(--color-text-primary);margin-bottom:var(--space-1);">Full-width CTAs on mobile</div>
+            <div style="font-size:var(--text-body-md);color:var(--color-text-secondary);">Primary action buttons inside booking flows and modals should be <code style="font-family:var(--font-mono);font-size:12px;background:var(--color-bg-elevated);padding:1px 5px;border-radius:var(--radius-sm)">width: 100%</code> at ≤ 640px. Use the <code style="font-family:var(--font-mono);font-size:12px;background:var(--color-bg-elevated);padding:1px 5px;border-radius:var(--radius-sm)">.btn--full</code> modifier.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-4);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--color-green-primary);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:600;font-size:var(--text-body-md);color:var(--color-text-primary);margin-bottom:var(--space-1);">Touch targets ≥ 44×44px</div>
+            <div style="font-size:var(--text-body-md);color:var(--color-text-secondary);">Buttons, time slots, filter chips, and nav items must meet minimum touch size. Pad small elements rather than enlarging the visual footprint.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-4);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--color-green-primary);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:600;font-size:var(--text-body-md);color:var(--color-text-primary);margin-bottom:var(--space-1);">Sidebar → bottom sheet on mobile</div>
+            <div style="font-size:var(--text-body-md);color:var(--color-text-secondary);">The booking summary sidebar and bay detail sidebar collapse out of the two-column layout at 768px. On mobile (≤ 640px) they should render as a sticky bottom bar or be accessible via a "View Summary" toggle.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-4);background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--color-green-primary);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:600;font-size:var(--text-body-md);color:var(--color-text-primary);margin-bottom:var(--space-1);">Nav collapses to hamburger at 640px</div>
+            <div style="font-size:var(--text-body-md);color:var(--color-text-secondary);">The nav link row and action buttons collapse at ≤ 640px. The mobile nav drawer opens over a <code style="font-family:var(--font-mono);font-size:12px;background:var(--color-bg-elevated);padding:1px 5px;border-radius:var(--radius-sm)">--color-bg-overlay</code> backdrop. Logo and hamburger icon remain visible at all widths.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Page-by-page layout changes -->
+      <h3 class="ds-subsection-title" style="margin-top:var(--space-8);">Layout Changes by Page</h3>
+      <div style="overflow-x:auto;margin-bottom:var(--space-4);">
+        <table style="width:100%;border-collapse:collapse;font-size:var(--text-body-md);font-family:var(--font-body);">
+          <thead>
+            <tr style="border-bottom:2px solid var(--color-border);">
+              <th style="text-align:left;padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);font-weight:500;white-space:nowrap;">Page</th>
+              <th style="text-align:left;padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);font-weight:500;">Desktop</th>
+              <th style="text-align:left;padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);font-weight:500;">Tablet (≤ 768px)</th>
+              <th style="text-align:left;padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);font-weight:500;">Mobile (≤ 640px)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--color-border);">
+              <td style="padding:var(--space-3) var(--space-4);font-weight:500;color:var(--color-text-primary);white-space:nowrap;">Landing</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Hero split layout, 3-col features</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">2-col features, hero stacks</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Single column, full-width CTA</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--color-border);">
+              <td style="padding:var(--space-3) var(--space-4);font-weight:500;color:var(--color-text-primary);white-space:nowrap;">Bays</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">2-col grid + 440px detail sidebar</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">2-col grid, sidebar hidden</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">1-col grid, sidebar as bottom sheet</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--color-border);">
+              <td style="padding:var(--space-3) var(--space-4);font-weight:500;color:var(--color-text-primary);white-space:nowrap;">Booking</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Calendar + sidebar, step indicator</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Full-width calendar, sidebar below</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Scrollable slots, sticky bottom bar</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--color-border);">
+              <td style="padding:var(--space-3) var(--space-4);font-weight:500;color:var(--color-text-primary);white-space:nowrap;">Confirm</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Payment form + summary sidebar</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Stacked — form then summary</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Single column, full-width button</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--color-border);">
+              <td style="padding:var(--space-3) var(--space-4);font-weight:500;color:var(--color-text-primary);white-space:nowrap;">Dashboard</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">4-col stat cards, 2-col layout</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">2-col stat cards</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">1-col stacked, scrollable history</td>
+            </tr>
+            <tr>
+              <td style="padding:var(--space-3) var(--space-4);font-weight:500;color:var(--color-text-primary);white-space:nowrap;">Confirmation</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Full hero + 2-col detail + QR</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Centered card, QR below details</td>
+              <td style="padding:var(--space-3) var(--space-4);color:var(--color-text-secondary);">Single column, QR centered</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 

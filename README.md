@@ -47,6 +47,48 @@ open index.html
 - Google Fonts: Cormorant Garamond, DM Sans, DM Mono
 - Responsive at `640px` (mobile) and `768px` (tablet)
 
+### Responsive
+
+Two breakpoints. Desktop layout is the default — no media query needed above 769px.
+
+| Breakpoint | Query | What changes |
+|------------|-------|-------------|
+| **Tablet** | `max-width: 768px` | Sidebars collapse, grids go 1–2 col, stacked layout |
+| **Mobile** | `max-width: 640px` | Single column, full-width CTAs, nav → hamburger, bottom bar |
+
+**Media query pattern** — always cascade tablet → mobile, at the bottom of each CSS file:
+
+```css
+@media (max-width: 768px) {
+  .page-grid { grid-template-columns: 1fr; }
+  .bay-card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .bay-card-grid { grid-template-columns: 1fr; }
+  .btn { width: 100%; } /* primary CTAs in booking flow */
+}
+```
+
+**Rules that always apply:**
+- Every page wrapper must have `padding-top: var(--nav-height)` (72px) to clear the fixed nav — never hardcode this
+- No horizontal scroll at 375px viewport — use `overflow-x: auto` on scroll containers (calendar, tables)
+- Touch targets ≥ 44×44px — pad small elements rather than enlarging the visual footprint
+- Primary action buttons in booking flows and modals → `width: 100%` at ≤ 640px
+- Booking summary sidebar and bay detail sidebar collapse at 768px; on mobile they render as a sticky bottom bar or "View Summary" toggle
+- Nav collapses to hamburger at ≤ 640px; logo always visible
+
+**Layout changes by page:**
+
+| Page | Desktop | Tablet (≤ 768px) | Mobile (≤ 640px) |
+|------|---------|-----------------|-----------------|
+| Landing | Hero split, 3-col features | 2-col features, hero stacks | Single column, full-width CTA |
+| Bays | 2-col grid + 440px sidebar | 2-col grid, sidebar hidden | 1-col grid, sidebar as bottom sheet |
+| Booking | Calendar + sidebar, step indicator | Full-width calendar, sidebar below | Scrollable slots, sticky bottom bar |
+| Confirm | Payment form + summary sidebar | Stacked — form then summary | Single column, full-width button |
+| Dashboard | 4-col stat cards, 2-col layout | 2-col stat cards | 1-col stacked, scrollable history |
+| Confirmation | Full hero + 2-col detail + QR | Centered card, QR below details | Single column, QR centered |
+
 ### Theming
 - **Light mode** is default (`:root`)
 - **Dark mode** via `[data-theme="dark"]` on `<html>`
