@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Golf Room — Design System</title>
+<link rel="icon" href="assets/logos/mogogram-logo-dark.svg"  type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/logos/mogogram-logo-light.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="globals.css">
+<link rel="stylesheet" href="components.css">
+<style>
+/* ── DS-specific layout (not reusable) ─────────────────────── */
+.ds-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+.ds-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--color-bg-surface);
+  border-right: 1px solid var(--color-border);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  scrollbar-width: thin;
+}
+
+.ds-sidebar__logo {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+.ds-sidebar__logo img {
+  height: 22px;
+  width: auto;
+}
+
+.ds-sidebar__section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  padding: var(--space-3) var(--space-3) var(--space-1);
+  margin-top: var(--space-3);
+}
+
+.ds-sidebar__link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-body-md);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: background 150ms ease, color 150ms ease;
+  cursor: pointer;
+}
+.ds-sidebar__link:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+
+.ds-sidebar__footer {
+  margin-top: auto;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.ds-main {
+  padding: var(--space-12) var(--space-16);
+  max-width: 960px;
+}
+
+.ds-section {
+  margin-bottom: var(--space-20);
+  scroll-margin-top: var(--space-8);
+}
+
+.ds-section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-display-md);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.ds-section-desc {
+  font-size: var(--text-body-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-8);
+}
+
+.ds-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-10) 0;
+}
+
+.ds-subsection-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+/* Token display grids */
+.ds-color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+
+.ds-swatch {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+.ds-swatch__color {
+  height: 64px;
+}
+.ds-swatch__info {
+  background: var(--color-bg-surface);
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+.ds-swatch__name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  word-break: break-all;
+}
+.ds-swatch__role {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* Typography demo */
+.ds-type-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-6);
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.ds-type-row:last-child { border-bottom: none; }
+.ds-type-meta {
+  flex-shrink: 0;
+  width: 160px;
+}
+.ds-type-token {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+.ds-type-spec {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* Spacing demo */
+.ds-space-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.ds-space-row:last-child { border-bottom: none; }
+.ds-space-token { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); width: 80px; flex-shrink: 0; }
+.ds-space-bar { height: 8px; background: var(--color-green-primary); border-radius: var(--radius-full); opacity: 0.7; }
+.ds-space-value { font-size: 11px; color: var(--color-text-secondary); flex-shrink: 0; }
+
+/* Shadow demo */
+.ds-shadow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-5);
+}
+.ds-shadow-demo {
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  text-align: center;
+  border: 1px solid var(--color-border);
+}
+.ds-shadow-name { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); margin-top: var(--space-2); }
+
+/* Radius demo */
+.ds-radius-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  align-items: flex-end;
+}
+.ds-radius-demo {
+  background: var(--color-green-subtle);
+  border: 2px solid var(--color-green-primary);
+  width: 72px;
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.ds-radius-token { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-secondary); text-align: center; margin-top: var(--space-2); }
+
+/* Component demo rows */
+.ds-demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+}
+.ds-demo-row + .ds-demo-row {
+  border-top: 1px solid var(--color-border);
+}
+.ds-demo-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.06em;
+  min-width: 100px;
+}
+
+/* Nav demo (non-fixed) */
+.nav-demo {
+  position: relative;
+  height: var(--nav-height);
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+}
+.nav-demo__inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Booking steps demo */
+.booking-steps-demo {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+/* Calendar demo (abbreviated) */
+.calendar-demo {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg-surface);
+}
+.calendar-demo__header {
+  display: grid;
+  grid-template-columns: 56px repeat(4, 1fr);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+}
+.calendar-demo__header-cell {
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  font-size: var(--text-body-md);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  border-right: 1px solid var(--color-border);
+}
+.calendar-demo__header-cell:first-child { font-size: 11px; }
+.calendar-demo__row {
+  display: grid;
+  grid-template-columns: 56px repeat(4, 1fr);
+}
+.calendar-demo__time {
+  padding: var(--space-2);
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--color-text-secondary);
+  border-right: 1px solid var(--color-border);
+  height: var(--slot-h);
+  display: flex;
+  align-items: flex-start;
+  padding-top: var(--space-2);
+}
+.calendar-demo__cell {
+  height: var(--slot-h);
+  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+.calendar-demo__cell:hover { background: var(--color-green-subtle); }
+.calendar-demo__cell--selected { background: var(--color-green-subtle); border-color: var(--color-green-primary); }
+.calendar-demo__cell--booked { background: var(--color-bg-elevated); cursor: not-allowed; }
+
+/* Dropdown demo */
+.dropdown-demo {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-demo__menu {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  overflow: hidden;
+  margin-top: var(--space-2);
+}
+
+/* Modal demo (non-overlay) */
+.modal-demo {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  max-width: 380px;
+}
+
+/* Bottom bar demo */
+.selection-bar-demo {
+  height: 64px;
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+}
+
+/* Bay card grid demo */
+.bay-grid-demo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .ds-layout { grid-template-columns: 1fr; }
+  .ds-sidebar { position: relative; height: auto; flex-direction: row; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-4); overflow-x: auto; }
+  .ds-sidebar__footer { display: none; }
+  .ds-main { padding: var(--space-8) var(--space-6); }
+  .bay-grid-demo { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<script>
+  (function() {
+    const stored = localStorage.getItem('golf-room-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (stored === 'dark' || (!stored && prefersDark)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+
+<div class="ds-layout">
+
+  <!-- ── Sidebar ───────────────────────────────────────────────────── -->
+  <aside class="ds-sidebar">
+    <div class="ds-sidebar__logo">
+      <img src="assets/logos/the-golf-room-logo-dark.svg"  id="ds-logo-light" alt="The Golf Room">
+      <img src="assets/logos/the-golf-room-logo-light.svg" id="ds-logo-dark"  alt="The Golf Room" style="display:none">
+    </div>
+
+    <span class="ds-sidebar__section-label">Foundation</span>
+    <a href="#colors"     class="ds-sidebar__link">Colors</a>
+    <a href="#typography" class="ds-sidebar__link">Typography</a>
+    <a href="#spacing"    class="ds-sidebar__link">Spacing</a>
+    <a href="#shadows"    class="ds-sidebar__link">Shadows</a>
+    <a href="#radii"      class="ds-sidebar__link">Border Radii</a>
+
+    <span class="ds-sidebar__section-label">Components</span>
+    <a href="#buttons"     class="ds-sidebar__link">Buttons</a>
+    <a href="#badges"      class="ds-sidebar__link">Badges</a>
+    <a href="#cards"       class="ds-sidebar__link">Cards</a>
+    <a href="#inputs"      class="ds-sidebar__link">Inputs</a>
+    <a href="#nav"         class="ds-sidebar__link">Navigation</a>
+    <a href="#steps"       class="ds-sidebar__link">Booking Steps</a>
+    <a href="#bay-cards"   class="ds-sidebar__link">Bay Cards</a>
+    <a href="#slots"       class="ds-sidebar__link">Time Slots</a>
+    <a href="#chips"       class="ds-sidebar__link">Filter Chips</a>
+    <a href="#calendar"    class="ds-sidebar__link">Calendar Grid</a>
+    <a href="#booking-summary" class="ds-sidebar__link">Booking Summary</a>
+    <a href="#selection-bar"   class="ds-sidebar__link">Selection Bar</a>
+    <a href="#modal"       class="ds-sidebar__link">Auth Modal</a>
+    <a href="#stat-cards"  class="ds-sidebar__link">Stat Cards</a>
+    <a href="#membership"  class="ds-sidebar__link">Membership Card</a>
+    <a href="#live"        class="ds-sidebar__link">Live Indicator</a>
+
+    <div class="ds-sidebar__footer">
+      <button class="btn btn--ghost btn--sm btn--full" id="ds-theme-toggle" style="justify-content:flex-start;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        Toggle theme
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ─────────────────────────────────────────────────────── -->
+  <main class="ds-main">
+
+    <!-- Hero -->
+    <div style="margin-bottom: var(--space-16);">
+      <p style="font-family: var(--font-mono); font-size: var(--text-label); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-green-primary); margin-bottom: var(--space-3);">Dev Handoff · Design System</p>
+      <h1 style="font-family: var(--font-display); font-size: var(--text-display-lg); font-weight: 300; letter-spacing: -0.02em; color: var(--color-text-primary); line-height: 1.1; margin-bottom: var(--space-4);">The Golf Room</h1>
+      <p style="font-size: var(--text-body-lg); color: var(--color-text-secondary); max-width: 560px; line-height: 1.6;">All design tokens and components for the Golf Room booking platform. Every value references a CSS variable from <code style="font-family: var(--font-mono); font-size: 13px; background: var(--color-bg-elevated); padding: 2px 6px; border-radius: var(--radius-sm);">globals.css</code> — no hardcoded values anywhere.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         COLORS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="colors">
+      <h2 class="ds-section-title">Colors</h2>
+      <p class="ds-section-desc">All colors defined as CSS custom properties. Light mode is default; dark mode applied via <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">[data-theme="dark"]</code> on <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">&lt;html&gt;</code>.</p>
+
+      <p class="ds-subsection-title">Backgrounds</p>
+      <div class="ds-color-grid">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-bg-base)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-bg-base</div><div class="ds-swatch__role">Page background</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-bg-surface);border-bottom:1px solid var(--color-border)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-bg-surface</div><div class="ds-swatch__role">Cards, sheets</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-bg-elevated)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-bg-elevated</div><div class="ds-swatch__role">Hover, raised</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-bg-overlay)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-bg-overlay</div><div class="ds-swatch__role">Nav, modals (glass)</div></div></div>
+      </div>
+
+      <p class="ds-subsection-title">Brand Green</p>
+      <div class="ds-color-grid">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-green-primary)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-green-primary</div><div class="ds-swatch__role">Brand, buttons, CTAs</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-green-light)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-green-light</div><div class="ds-swatch__role">Focus borders, hover</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-green-vivid)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-green-vivid</div><div class="ds-swatch__role">Dark mode accent</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-green-subtle)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-green-subtle</div><div class="ds-swatch__role">Hover tint, tag bg</div></div></div>
+      </div>
+
+      <p class="ds-subsection-title">Gold Accent</p>
+      <div class="ds-color-grid">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-gold)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-gold</div><div class="ds-swatch__role">Primary CTA, price</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-gold-light)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-gold-light</div><div class="ds-swatch__role">Hover state</div></div></div>
+      </div>
+
+      <p class="ds-subsection-title">Blue (theme-independent)</p>
+      <div class="ds-color-grid">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-blue-deep)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-blue-deep</div><div class="ds-swatch__role">Course imagery, sky</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-blue-primary)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-blue-primary</div><div class="ds-swatch__role">Water, accent</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-blue-light)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-blue-light</div><div class="ds-swatch__role">Light accent</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-blue-vivid)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-blue-vivid</div><div class="ds-swatch__role">Vivid highlight</div></div></div>
+      </div>
+
+      <p class="ds-subsection-title">Text</p>
+      <div class="ds-color-grid">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-text-primary)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-text-primary</div><div class="ds-swatch__role">Headings, body</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-text-secondary)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-text-secondary</div><div class="ds-swatch__role">Labels, captions</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-text-inverse);border:1px solid var(--color-border)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-text-inverse</div><div class="ds-swatch__role">On dark bg</div></div></div>
+      </div>
+
+      <p class="ds-subsection-title">Borders</p>
+      <div class="ds-color-grid">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-border)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-border</div><div class="ds-swatch__role">Default dividers</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-border-strong)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-border-strong</div><div class="ds-swatch__role">Hover, focus rings</div></div></div>
+      </div>
+
+      <p class="ds-subsection-title">Feedback</p>
+      <div class="ds-color-grid">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-success)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-success</div><div class="ds-swatch__role">Available, confirmed</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-warning)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-warning</div><div class="ds-swatch__role">Limited, caution</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--color-error)"></div><div class="ds-swatch__info"><div class="ds-swatch__name">--color-error</div><div class="ds-swatch__role">Errors, unavailable</div></div></div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         TYPOGRAPHY
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="typography">
+      <h2 class="ds-section-title">Typography</h2>
+      <p class="ds-section-desc">Three font families, nine size tokens. Weight and tracking are set per component — only font-size is tokenized.</p>
+
+      <p class="ds-subsection-title">Font Families</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-8);">
+        <div class="card" style="padding:var(--space-5);">
+          <div style="font-family:var(--font-display);font-size:28px;font-weight:300;color:var(--color-text-primary);margin-bottom:var(--space-2);">Cormorant Garamond</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);">--font-display · Display / Hero</div>
+          <div style="font-family:var(--font-display);font-size:var(--text-body-md);color:var(--color-text-secondary);margin-top:var(--space-3);font-style:italic;">The quick brown fox jumps over the lazy dog.</div>
+        </div>
+        <div class="card" style="padding:var(--space-5);">
+          <div style="font-family:var(--font-body);font-size:24px;font-weight:400;color:var(--color-text-primary);margin-bottom:var(--space-2);">DM Sans</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);">--font-body · Body / UI</div>
+          <div style="font-family:var(--font-body);font-size:var(--text-body-md);color:var(--color-text-secondary);margin-top:var(--space-3);">The quick brown fox jumps over the lazy dog.</div>
+        </div>
+        <div class="card" style="padding:var(--space-5);">
+          <div style="font-family:var(--font-mono);font-size:20px;font-weight:400;color:var(--color-text-primary);margin-bottom:var(--space-2);">DM Mono</div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);">--font-mono · Data / Labels</div>
+          <div style="font-family:var(--font-mono);font-size:var(--text-body-md);color:var(--color-text-secondary);margin-top:var(--space-3);">The quick brown fox jumps over the lazy dog.</div>
+        </div>
+      </div>
+
+      <p class="ds-subsection-title">Type Scale</p>
+      <div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-display-xl</div><div class="ds-type-spec">80px · wt 300 · −0.02em · display</div></div>
+          <div style="font-family:var(--font-display);font-size:clamp(40px,6vw,var(--text-display-xl));font-weight:300;letter-spacing:-0.02em;line-height:1;color:var(--color-text-primary);">Hero</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-display-lg</div><div class="ds-type-spec">64px · wt 300 · −0.02em · display</div></div>
+          <div style="font-family:var(--font-display);font-size:clamp(32px,5vw,var(--text-display-lg));font-weight:300;letter-spacing:-0.02em;line-height:1;color:var(--color-text-primary);">Page Title</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-display-md</div><div class="ds-type-spec">48px · wt 400 · −0.02em · display</div></div>
+          <div style="font-family:var(--font-display);font-size:clamp(28px,4vw,var(--text-display-md));font-weight:400;letter-spacing:-0.02em;line-height:1.1;color:var(--color-text-primary);">Section Header</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-heading-lg</div><div class="ds-type-spec">32px · wt 500 · −0.01em · body</div></div>
+          <div style="font-family:var(--font-body);font-size:var(--text-heading-lg);font-weight:500;letter-spacing:-0.01em;line-height:1.2;color:var(--color-text-primary);">Card Title</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-heading-md</div><div class="ds-type-spec">24px · wt 500 · −0.01em · body</div></div>
+          <div style="font-family:var(--font-body);font-size:var(--text-heading-md);font-weight:500;letter-spacing:-0.01em;line-height:1.3;color:var(--color-text-primary);">Sub-heading</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-heading-sm</div><div class="ds-type-spec">20px · wt 600 · −0.01em · body</div></div>
+          <div style="font-family:var(--font-body);font-size:var(--text-heading-sm);font-weight:600;letter-spacing:-0.01em;color:var(--color-text-primary);">Nav / Labels</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-body-lg</div><div class="ds-type-spec">18px · wt 400 · 0 · body</div></div>
+          <div style="font-size:var(--text-body-lg);font-weight:400;color:var(--color-text-primary);">Lead body text</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-body-md</div><div class="ds-type-spec">16px · wt 400 · 0 · body</div></div>
+          <div style="font-size:var(--text-body-md);font-weight:400;color:var(--color-text-primary);">Default body text — the primary reading size for UI labels, descriptions, and content.</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><div class="ds-type-token">--text-label</div><div class="ds-type-spec">12px · wt 500 · 0.1em · mono · ALL CAPS</div></div>
+          <div style="font-family:var(--font-mono);font-size:var(--text-label);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-text-secondary);">Section Label · Badge Text · Monospace UI</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SPACING
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="spacing">
+      <h2 class="ds-section-title">Spacing</h2>
+      <p class="ds-section-desc">4px base scale. Token format: <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">--space-{n}</code> = n × 4px.</p>
+      <div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-1</span><div class="ds-space-bar" style="width:4px"></div><span class="ds-space-value">4px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-2</span><div class="ds-space-bar" style="width:8px"></div><span class="ds-space-value">8px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-3</span><div class="ds-space-bar" style="width:12px"></div><span class="ds-space-value">12px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-4</span><div class="ds-space-bar" style="width:16px"></div><span class="ds-space-value">16px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-5</span><div class="ds-space-bar" style="width:20px"></div><span class="ds-space-value">20px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-6</span><div class="ds-space-bar" style="width:24px"></div><span class="ds-space-value">24px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-8</span><div class="ds-space-bar" style="width:32px"></div><span class="ds-space-value">32px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-10</span><div class="ds-space-bar" style="width:40px"></div><span class="ds-space-value">40px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-12</span><div class="ds-space-bar" style="width:48px"></div><span class="ds-space-value">48px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-16</span><div class="ds-space-bar" style="width:64px"></div><span class="ds-space-value">64px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-20</span><div class="ds-space-bar" style="width:80px"></div><span class="ds-space-value">80px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-24</span><div class="ds-space-bar" style="width:96px"></div><span class="ds-space-value">96px</span></div>
+        <div class="ds-space-row"><span class="ds-space-token">--space-32</span><div class="ds-space-bar" style="width:128px"></div><span class="ds-space-value">128px</span></div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SHADOWS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="shadows">
+      <h2 class="ds-section-title">Shadows</h2>
+      <p class="ds-section-desc">Five elevation levels. Light and dark mode values differ — always use the variable.</p>
+      <div class="ds-shadow-grid">
+        <div class="ds-shadow-demo" style="box-shadow:var(--shadow-sm)"><span style="font-family:var(--font-body);color:var(--color-text-primary);font-weight:500;">sm</span><div class="ds-shadow-name">--shadow-sm · Subtle lift</div></div>
+        <div class="ds-shadow-demo" style="box-shadow:var(--shadow-md)"><span style="font-family:var(--font-body);color:var(--color-text-primary);font-weight:500;">md</span><div class="ds-shadow-name">--shadow-md · Cards, nav</div></div>
+        <div class="ds-shadow-demo" style="box-shadow:var(--shadow-lg)"><span style="font-family:var(--font-body);color:var(--color-text-primary);font-weight:500;">lg</span><div class="ds-shadow-name">--shadow-lg · Modals, drawers</div></div>
+        <div class="ds-shadow-demo" style="box-shadow:var(--shadow-glow-green)"><span style="font-family:var(--font-body);color:var(--color-green-primary);font-weight:500;">glow green</span><div class="ds-shadow-name">--shadow-glow-green · Focus, active</div></div>
+        <div class="ds-shadow-demo" style="box-shadow:var(--shadow-glow-gold)"><span style="font-family:var(--font-body);color:var(--color-gold);font-weight:500;">glow gold</span><div class="ds-shadow-name">--shadow-glow-gold · CTA hover</div></div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         RADII
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="radii">
+      <h2 class="ds-section-title">Border Radii</h2>
+      <p class="ds-section-desc">Five levels from sharp tags to full pills.</p>
+      <div class="ds-radius-grid">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div class="ds-radius-demo" style="border-radius:var(--radius-sm)"></div>
+          <div class="ds-radius-token">--radius-sm<br>4px · Tags</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div class="ds-radius-demo" style="border-radius:var(--radius-md)"></div>
+          <div class="ds-radius-token">--radius-md<br>8px · Inputs</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div class="ds-radius-demo" style="border-radius:var(--radius-lg)"></div>
+          <div class="ds-radius-token">--radius-lg<br>16px · Cards</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div class="ds-radius-demo" style="border-radius:var(--radius-xl)"></div>
+          <div class="ds-radius-token">--radius-xl<br>24px · Modals</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div class="ds-radius-demo" style="border-radius:var(--radius-full)"></div>
+          <div class="ds-radius-token">--radius-full<br>9999px · Pills</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BUTTONS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="buttons">
+      <h2 class="ds-section-title">Buttons</h2>
+      <p class="ds-section-desc">Four variants × three sizes. Base class <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">.btn</code> + modifier <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">.btn--primary</code> etc.</p>
+
+      <div class="ds-demo-row"><span class="ds-demo-label">primary</span>
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--lg">Large</button>
+        <button class="btn btn--primary" disabled>Disabled</button>
+      </div>
+      <div class="ds-demo-row"><span class="ds-demo-label">secondary</span>
+        <button class="btn btn--secondary btn--sm">Small</button>
+        <button class="btn btn--secondary">Default</button>
+        <button class="btn btn--secondary btn--lg">Large</button>
+        <button class="btn btn--secondary" disabled>Disabled</button>
+      </div>
+      <div class="ds-demo-row"><span class="ds-demo-label">ghost</span>
+        <button class="btn btn--ghost btn--sm">Small</button>
+        <button class="btn btn--ghost">Default</button>
+        <button class="btn btn--ghost btn--lg">Large</button>
+      </div>
+      <div class="ds-demo-row"><span class="ds-demo-label">gold</span>
+        <button class="btn btn--gold btn--sm">Small</button>
+        <button class="btn btn--gold">Book Now</button>
+        <button class="btn btn--gold btn--lg">Large</button>
+      </div>
+      <div class="ds-demo-row"><span class="ds-demo-label">icon</span>
+        <button class="btn btn--ghost btn--icon" aria-label="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M4.93 19.07a10 10 0 0 0 14.14 0M4.93 4.93A10 10 0 0 0 4.93 19.07M19.07 19.07a10 10 0 0 0 0-14.14"/></svg>
+        </button>
+        <button class="btn btn--secondary btn--icon" aria-label="Add">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button class="btn btn--primary btn--icon" aria-label="Check">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BADGES
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="badges">
+      <h2 class="ds-section-title">Badges</h2>
+      <p class="ds-section-desc">Monospace caps labels. Add <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">.badge--dot</code> for a status indicator dot.</p>
+      <div class="ds-demo-row">
+        <span class="badge badge--green">Available</span>
+        <span class="badge badge--green badge--dot">Open</span>
+        <span class="badge badge--gold">Premium</span>
+        <span class="badge badge--gold badge--dot">Limited</span>
+        <span class="badge badge--gray">Pending</span>
+        <span class="badge badge--gray badge--dot">Inactive</span>
+        <span class="badge badge--error">Unavailable</span>
+        <span class="badge badge--error badge--dot">Booked</span>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         CARDS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="cards">
+      <h2 class="ds-section-title">Cards</h2>
+      <p class="ds-section-desc">Surface containers with hover elevation. Use <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">.card--elevated</code> for raised variant, <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">.card--dark</code> for inverted.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-5);">
+        <div class="card">
+          <div style="font-family:var(--font-display);font-size:var(--text-heading-md);font-weight:400;color:var(--color-text-primary);margin-bottom:var(--space-2);">Default</div>
+          <div style="color:var(--color-text-secondary);font-size:var(--text-body-md);">White surface with border. Hover to see shadow upgrade.</div>
+        </div>
+        <div class="card card--elevated">
+          <div style="font-family:var(--font-display);font-size:var(--text-heading-md);font-weight:400;color:var(--color-text-primary);margin-bottom:var(--space-2);">Elevated</div>
+          <div style="color:var(--color-text-secondary);font-size:var(--text-body-md);">Uses <code style="font-family:var(--font-mono);font-size:11px;">--color-bg-elevated</code> background.</div>
+        </div>
+        <div class="card card--dark">
+          <div style="font-family:var(--font-display);font-size:var(--text-heading-md);font-weight:400;margin-bottom:var(--space-2);">Dark</div>
+          <div style="opacity:0.75;font-size:var(--text-body-md);">Inverted surface for hero cards and featured content.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         INPUTS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="inputs">
+      <h2 class="ds-section-title">Inputs</h2>
+      <p class="ds-section-desc">Text, email, tel, and select fields. Green focus ring, error state with red border.</p>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-5);">
+        <div class="input-wrapper">
+          <label class="input-label">Full Name</label>
+          <input class="input" type="text" placeholder="James Morrison" value="">
+        </div>
+        <div class="input-wrapper">
+          <label class="input-label">Email</label>
+          <input class="input" type="email" placeholder="james@example.com">
+        </div>
+        <div class="input-wrapper">
+          <label class="input-label">Error state</label>
+          <input class="input input--error" type="email" value="not-an-email">
+          <span class="input-error-msg">Please enter a valid email address.</span>
+        </div>
+        <div class="input-wrapper">
+          <label class="input-label">With icon</label>
+          <div class="input-icon-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="input" type="text" placeholder="Search bays...">
+          </div>
+        </div>
+        <div class="input-wrapper">
+          <label class="input-label">Select</label>
+          <select class="select">
+            <option>1 player</option>
+            <option>2 players</option>
+            <option>3 players</option>
+            <option>4 players</option>
+          </select>
+        </div>
+        <div class="input-wrapper">
+          <label class="input-label">Disabled</label>
+          <input class="input" type="text" placeholder="Cannot edit" disabled>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         NAVIGATION
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="nav">
+      <h2 class="ds-section-title">Navigation</h2>
+      <p class="ds-section-desc">Fixed glassmorphic top bar. Height: 72px (<code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">--nav-height</code>). Always use <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">padding-top: var(--nav-height)</code> on page content.</p>
+
+      <div class="nav-demo" style="margin-bottom:var(--space-5);">
+        <div class="nav-demo__inner">
+          <a href="#" class="nav__logo">
+            <img src="assets/logos/the-golf-room-logo-dark.svg" id="nav-logo-light" alt="The Golf Room">
+            <img src="assets/logos/the-golf-room-logo-light.svg" id="nav-logo-dark" alt="The Golf Room" style="display:none">
+          </a>
+          <ul class="nav__links" style="list-style:none;display:flex;gap:var(--space-2);">
+            <li><a class="nav__link nav__link--active" href="#">Bays</a></li>
+            <li><a class="nav__link" href="#">Pricing</a></li>
+            <li><a class="nav__link" href="#">About</a></li>
+          </ul>
+          <div class="nav__actions">
+            <button class="theme-toggle" aria-label="Toggle theme">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </button>
+            <button class="btn btn--ghost">Sign in</button>
+            <button class="btn btn--primary">Book now</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="ds-subsection-title" style="margin-top:var(--space-6);">Profile dropdown (dashboard)</p>
+      <div class="dropdown-demo">
+        <div class="nav__profile" style="display:inline-flex;">
+          <div class="nav__avatar">JM</div>
+          <span style="font-size:var(--text-body-md);font-weight:500;color:var(--color-text-primary);">James Morrison</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-text-secondary)"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dropdown-demo__menu">
+          <div class="nav__dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Edit Profile
+          </div>
+          <div class="nav__dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0"/></svg>
+            Settings
+          </div>
+          <div class="nav__dropdown-item nav__dropdown-item--danger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign out
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BOOKING STEPS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="steps">
+      <h2 class="ds-section-title">Booking Steps</h2>
+      <p class="ds-section-desc">4-step progress indicator. Three states: pending (default), active, complete.</p>
+      <div class="booking-steps-demo">
+        <div class="step step--complete">
+          <div class="step__circle">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="step__label">Date & Time</span>
+        </div>
+        <div class="step-connector step-connector--complete"></div>
+        <div class="step step--active">
+          <div class="step__circle">2</div>
+          <span class="step__label">Choose Bay</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step">
+          <div class="step__circle">3</div>
+          <span class="step__label">Add-ons</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step">
+          <div class="step__circle">4</div>
+          <span class="step__label">Confirm</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BAY CARDS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="bay-cards">
+      <h2 class="ds-section-title">Bay Cards</h2>
+      <p class="ds-section-desc">Six named gradient palettes. States: default (hover lifts), selected (green ring), unavailable (dimmed).</p>
+      <div class="bay-grid-demo">
+        <div class="bay-card bay-card--highlands">
+          <div class="bay-card__number">01</div>
+          <div class="bay-card__footer">
+            <div class="bay-card__name">Highlands</div>
+            <div class="bay-card__subtitle">Bay 01 · 4K Display</div>
+            <div class="bay-card__badges"><span class="badge badge--green">Available</span></div>
+          </div>
+        </div>
+        <div class="bay-card bay-card--masters bay-card--selected">
+          <div class="bay-card__number">02</div>
+          <div class="bay-card__footer">
+            <div class="bay-card__name">Masters</div>
+            <div class="bay-card__subtitle">Bay 02 · 4K Display</div>
+            <div class="bay-card__badges"><span class="badge badge--gold">Selected</span></div>
+          </div>
+        </div>
+        <div class="bay-card bay-card--links bay-card--unavailable">
+          <div class="bay-card__number">03</div>
+          <div class="bay-card__footer">
+            <div class="bay-card__name">Links</div>
+            <div class="bay-card__subtitle">Bay 03 · 4K Display</div>
+            <div class="bay-card__badges"><span class="badge badge--error">Booked</span></div>
+          </div>
+        </div>
+        <div class="bay-card bay-card--augusta">
+          <div class="bay-card__number">04</div>
+          <div class="bay-card__footer">
+            <div class="bay-card__name">Augusta</div>
+            <div class="bay-card__subtitle">Bay 04 · 4K Display</div>
+            <div class="bay-card__badges"><span class="badge badge--gold badge--dot">Premium</span></div>
+          </div>
+        </div>
+        <div class="bay-card bay-card--pebble">
+          <div class="bay-card__number">05</div>
+          <div class="bay-card__footer">
+            <div class="bay-card__name">Pebble</div>
+            <div class="bay-card__subtitle">Bay 05 · 4K Display</div>
+            <div class="bay-card__badges"><span class="badge badge--green">Available</span></div>
+          </div>
+        </div>
+        <div class="bay-card bay-card--st-andrews">
+          <div class="bay-card__number">06</div>
+          <div class="bay-card__footer">
+            <div class="bay-card__name">St Andrews</div>
+            <div class="bay-card__subtitle">Bay 06 · 4K Display</div>
+            <div class="bay-card__badges"><span class="badge badge--green">Available</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         TIME SLOTS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="slots">
+      <h2 class="ds-section-title">Time Slots</h2>
+      <p class="ds-section-desc">Monospace time labels. Three states: default, selected (green fill), unavailable (dimmed, no-pointer).</p>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);">
+        <div class="time-slot">09:00</div>
+        <div class="time-slot">10:00</div>
+        <div class="time-slot time-slot--selected">11:00</div>
+        <div class="time-slot">12:00</div>
+        <div class="time-slot time-slot--unavailable">13:00</div>
+        <div class="time-slot time-slot--unavailable">14:00</div>
+        <div class="time-slot">15:00</div>
+        <div class="time-slot">16:00</div>
+        <div class="time-slot">17:00</div>
+        <div class="time-slot time-slot--unavailable">18:00</div>
+        <div class="time-slot">19:00</div>
+        <div class="time-slot">20:00</div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         FILTER CHIPS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="chips">
+      <h2 class="ds-section-title">Filter Chips</h2>
+      <p class="ds-section-desc">Pill-shaped toggles for bay filters. Each bay type has a color-coded dot. Add <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">.filter-chip--active</code> for selected state.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);">
+        <div class="filter-chip filter-chip--active">
+          <div class="filter-chip__dot filter-chip__dot--highlands"></div>
+          Highlands
+        </div>
+        <div class="filter-chip">
+          <div class="filter-chip__dot filter-chip__dot--masters"></div>
+          Masters
+        </div>
+        <div class="filter-chip">
+          <div class="filter-chip__dot filter-chip__dot--links"></div>
+          Links
+        </div>
+        <div class="filter-chip">
+          <div class="filter-chip__dot filter-chip__dot--augusta"></div>
+          Augusta
+        </div>
+        <div class="filter-chip">
+          <div class="filter-chip__dot filter-chip__dot--pebble"></div>
+          Pebble
+        </div>
+        <div class="filter-chip">
+          <div class="filter-chip__dot filter-chip__dot--st-andrews"></div>
+          St Andrews
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         CALENDAR GRID
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="calendar">
+      <h2 class="ds-section-title">Calendar Grid</h2>
+      <p class="ds-section-desc">Time-gutter + day columns with sticky headers. Slot height: 64px (<code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">--slot-h</code>). States: default (hover), selected, booked (blocked).</p>
+      <div class="calendar-demo">
+        <div class="calendar-demo__header">
+          <div class="calendar-demo__header-cell" style="font-family:var(--font-mono);">TIME</div>
+          <div class="calendar-demo__header-cell">Mon 14</div>
+          <div class="calendar-demo__header-cell" style="color:var(--color-green-primary);">Tue 15</div>
+          <div class="calendar-demo__header-cell">Wed 16</div>
+          <div class="calendar-demo__header-cell">Thu 17</div>
+        </div>
+        <div class="calendar-demo__row">
+          <div class="calendar-demo__time">9am</div>
+          <div class="calendar-demo__cell calendar-demo__cell--booked"></div>
+          <div class="calendar-demo__cell"></div>
+          <div class="calendar-demo__cell"></div>
+          <div class="calendar-demo__cell calendar-demo__cell--booked"></div>
+        </div>
+        <div class="calendar-demo__row">
+          <div class="calendar-demo__time">10am</div>
+          <div class="calendar-demo__cell"></div>
+          <div class="calendar-demo__cell calendar-demo__cell--selected"></div>
+          <div class="calendar-demo__cell"></div>
+          <div class="calendar-demo__cell"></div>
+        </div>
+        <div class="calendar-demo__row">
+          <div class="calendar-demo__time">11am</div>
+          <div class="calendar-demo__cell"></div>
+          <div class="calendar-demo__cell calendar-demo__cell--booked"></div>
+          <div class="calendar-demo__cell"></div>
+          <div class="calendar-demo__cell"></div>
+        </div>
+        <div class="calendar-demo__row">
+          <div class="calendar-demo__time">12pm</div>
+          <div class="calendar-demo__cell calendar-demo__cell--booked"></div>
+          <div class="calendar-demo__cell calendar-demo__cell--booked"></div>
+          <div class="calendar-demo__cell"></div>
+          <div class="calendar-demo__cell calendar-demo__cell--booked"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BOOKING SUMMARY
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="booking-summary">
+      <h2 class="ds-section-title">Booking Summary</h2>
+      <p class="ds-section-desc">Right-sidebar component used across the booking flow. Dark green header, line-item rows, gold total.</p>
+      <div style="max-width:360px;">
+        <div class="booking-summary">
+          <div class="booking-summary__header">
+            <div class="booking-summary__title">Your Session</div>
+          </div>
+          <div class="booking-summary__body">
+            <div class="booking-summary__row">
+              <span class="booking-summary__label">Bay</span>
+              <span class="booking-summary__value">Highlands · Bay 01</span>
+            </div>
+            <div class="booking-summary__row">
+              <span class="booking-summary__label">Date</span>
+              <span class="booking-summary__value">Tue, Apr 15</span>
+            </div>
+            <div class="booking-summary__row">
+              <span class="booking-summary__label">Time</span>
+              <span class="booking-summary__value">10:00 – 12:00</span>
+            </div>
+            <div class="booking-summary__row">
+              <span class="booking-summary__label">Players</span>
+              <span class="booking-summary__value">2</span>
+            </div>
+            <div class="booking-summary__row">
+              <span class="booking-summary__label">Subtotal</span>
+              <span class="booking-summary__value">$120.00</span>
+            </div>
+            <div class="booking-summary__row">
+              <span class="booking-summary__label">Tax</span>
+              <span class="booking-summary__value">$9.42</span>
+            </div>
+            <div class="booking-summary__row" style="padding-top:var(--space-4);margin-top:var(--space-2);border-top:1px solid var(--color-border);">
+              <span class="booking-summary__label" style="font-weight:600;color:var(--color-text-primary);">Total</span>
+              <span class="booking-summary__total">$129.42</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SELECTION BAR
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="selection-bar">
+      <h2 class="ds-section-title">Selection Bar</h2>
+      <p class="ds-section-desc">Sticky bottom bar that appears after the user makes a selection in the booking calendar. Mirrors the fixed nav pattern.</p>
+      <div class="selection-bar-demo">
+        <div class="selection-bar__info">
+          <div class="selection-bar__item">
+            <span class="selection-bar__item-label">Date</span>
+            <span class="selection-bar__item-value">Tue, Apr 15</span>
+          </div>
+          <div class="selection-bar__item">
+            <span class="selection-bar__item-label">Time</span>
+            <span class="selection-bar__item-value">10:00 AM</span>
+          </div>
+          <div class="selection-bar__item">
+            <span class="selection-bar__item-label">Duration</span>
+            <span class="selection-bar__item-value">2 hrs</span>
+          </div>
+          <div class="selection-bar__item">
+            <span class="selection-bar__item-label">Total</span>
+            <span class="selection-bar__item-value" style="color:var(--color-gold);font-family:var(--font-display);font-size:var(--text-heading-sm);">$129.42</span>
+          </div>
+        </div>
+        <button class="btn btn--primary">Continue</button>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         AUTH MODAL
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="modal">
+      <h2 class="ds-section-title">Auth Modal</h2>
+      <p class="ds-section-desc">Sign in / Create account modal used on the landing page. Tab-switched, no separate auth route.</p>
+      <div class="modal-demo">
+        <div style="padding: var(--space-6) var(--space-6) 0; position:relative;">
+          <img src="assets/logos/the-golf-room-logo-dark.svg" id="modal-logo-light" style="height:20px;width:auto;margin-bottom:var(--space-5);" alt="The Golf Room">
+          <img src="assets/logos/the-golf-room-logo-light.svg" id="modal-logo-dark" style="height:20px;width:auto;margin-bottom:var(--space-5);display:none;" alt="The Golf Room">
+          <button class="modal__close" style="position:absolute;top:var(--space-5);right:var(--space-5);" aria-label="Close">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal__tabs" style="margin: 0 var(--space-6);">
+          <div class="modal__tab modal__tab--active">Sign In</div>
+          <div class="modal__tab">Create Account</div>
+        </div>
+        <div class="modal__body">
+          <div class="input-wrapper">
+            <label class="input-label">Email</label>
+            <input class="input" type="email" placeholder="james@example.com">
+          </div>
+          <div class="input-wrapper">
+            <label class="input-label">Password</label>
+            <input class="input" type="password" placeholder="••••••••">
+          </div>
+          <button class="btn btn--primary btn--full" style="margin-top:var(--space-2);">Sign In</button>
+          <p style="text-align:center;font-size:var(--text-body-md);color:var(--color-text-secondary);margin-top:var(--space-2);">
+            <a href="#" style="color:var(--color-green-primary);">Forgot password?</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         STAT CARDS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="stat-cards">
+      <h2 class="ds-section-title">Stat Cards</h2>
+      <p class="ds-section-desc">4-column grid on the dashboard. Display-font value, mono label, optional delta indicator.</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);">
+        <div class="stat-card">
+          <div class="stat-card__label">Sessions</div>
+          <div class="stat-card__value">24</div>
+          <div class="stat-card__delta stat-card__delta--up">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+            +3 this month
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Hours Played</div>
+          <div class="stat-card__value">48</div>
+          <div class="stat-card__subtext">last 90 days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Avg Score</div>
+          <div class="stat-card__value">82</div>
+          <div class="stat-card__delta stat-card__delta--up">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+            −4 strokes
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__label">Membership</div>
+          <div class="stat-card__value" style="font-size:var(--text-heading-md);font-family:var(--font-body);">Pro</div>
+          <div class="stat-card__subtext">Renews Apr 30</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         MEMBERSHIP CARD
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="membership">
+      <h2 class="ds-section-title">Membership Card</h2>
+      <p class="ds-section-desc">Inverted card used for tier presentation and user profile context.</p>
+      <div style="max-width:360px;">
+        <div class="membership-card">
+          <div class="membership-card__eyebrow">Pro Member</div>
+          <div class="membership-card__title">James Morrison</div>
+          <div class="membership-card__meta">Member since Jan 2024 · Renews Apr 30, 2026</div>
+          <div style="display:flex;gap:var(--space-3);margin-top:var(--space-5);">
+            <button class="btn btn--secondary btn--sm">Upgrade</button>
+            <button class="btn btn--ghost btn--sm" style="color:rgba(255,255,255,0.7);">Manage</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ds-divider"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         LIVE INDICATOR
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-section" id="live">
+      <h2 class="ds-section-title">Live Indicator</h2>
+      <p class="ds-section-desc">Pulsing dot used on the dashboard "Next Session" card. Respects <code style="font-family:var(--font-mono);font-size:13px;background:var(--color-bg-elevated);padding:2px 6px;border-radius:var(--radius-sm)">prefers-reduced-motion</code>.</p>
+      <div class="ds-demo-row">
+        <span class="live-indicator">
+          <span class="live-indicator__dot"></span>
+          In progress
+        </span>
+        <div style="padding: var(--space-5) var(--space-6);background:var(--color-green-primary);border-radius:var(--radius-lg);display:inline-flex;align-items:center;gap:var(--space-4);">
+          <span class="live-indicator" style="color:#fff;">
+            <span class="live-indicator__dot" style="background:#fff;"></span>
+            Live session
+          </span>
+          <span style="font-family:var(--font-mono);font-size:var(--text-label);color:rgba(255,255,255,0.7);letter-spacing:0.08em;">00:42:17 remaining</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div style="margin-top:var(--space-20);padding-top:var(--space-8);border-top:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-family:var(--font-mono);font-size:var(--text-label);color:var(--color-text-secondary);letter-spacing:0.08em;text-transform:uppercase;">The Golf Room · Design System · 2026</div>
+      <a href="index.html" style="font-size:var(--text-body-md);color:var(--color-green-primary);">← Back to index</a>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const html = document.documentElement;
+
+  function syncLogos() {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    // Sidebar logos
+    document.getElementById('ds-logo-light').style.display = isDark ? 'none' : 'block';
+    document.getElementById('ds-logo-dark').style.display  = isDark ? 'block' : 'none';
+    // Nav demo logos
+    const nl = document.getElementById('nav-logo-light');
+    const nd = document.getElementById('nav-logo-dark');
+    if (nl) nl.style.display = isDark ? 'none' : 'block';
+    if (nd) nd.style.display = isDark ? 'block' : 'none';
+    // Modal logos
+    const ml = document.getElementById('modal-logo-light');
+    const md2 = document.getElementById('modal-logo-dark');
+    if (ml)  ml.style.display  = isDark ? 'none' : 'block';
+    if (md2) md2.style.display = isDark ? 'block' : 'none';
+  }
+
+  document.getElementById('ds-theme-toggle').addEventListener('click', function() {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('golf-room-theme', isDark ? 'light' : 'dark');
+    syncLogos();
+  });
+
+  syncLogos();
+</script>
+</body>
+</html>

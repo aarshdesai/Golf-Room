@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Golf Room — Book a Session · Date &amp; Time</title>
+<link rel="icon" href="../assets/logos/mogogram-logo-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../assets/logos/mogogram-logo-dark.svg"  type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-bg-base:        #F4F1EC;
+  --color-bg-surface:     #FFFFFF;
+  --color-bg-elevated:    #EBE7E0;
+  --color-bg-overlay:     rgba(244,241,236,0.94);
+  --color-green-primary:  #1B6844;
+  --color-green-light:    #2F8A5A;
+  --color-green-vivid:    #3DA96C;
+  --color-green-subtle:   rgba(27,104,68,0.08);
+  --color-gold:           #A67C24;
+  --color-gold-light:     #C4982E;
+  --color-text-primary:   #141A16;
+  --color-text-secondary: #596760;
+  --color-text-inverse:   #F4F1EC;
+  --color-border:         rgba(27,104,68,0.13);
+  --color-border-strong:  rgba(166,124,36,0.3);
+  --color-shadow:         0 2px 12px rgba(0,0,0,0.07);
+  --color-shadow-lg:      0 8px 40px rgba(0,0,0,0.11);
+  --color-error:          #C0443A;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'DM Mono', monospace;
+  --nav-height:   72px;
+  --slot-h: 64px;
+}
+
+[data-theme="dark"] {
+  --color-bg-base:        #0A0E0B;
+  --color-bg-surface:     #111714;
+  --color-bg-elevated:    #1A211E;
+  --color-bg-overlay:     rgba(10,14,11,0.9);
+  --color-green-light:    #3DA96C;
+  --color-green-vivid:    #3DA96C;
+  --color-green-subtle:   rgba(27,104,68,0.2);
+  --color-gold:           #C9A84C;
+  --color-gold-light:     #E2C17A;
+  --color-text-primary:   #F0EDE6;
+  --color-text-secondary: #9DA89E;
+  --color-text-inverse:   #141A16;
+  --color-border:         rgba(47,138,90,0.80);
+  --color-border-strong:  rgba(201,168,76,0.60);
+  --color-shadow:         0 2px 12px rgba(0,0,0,0.35);
+  --color-shadow-lg:      0 8px 40px rgba(0,0,0,0.55);
+  --color-error:          #E07070;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ─── NAV ─────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: var(--nav-height);
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--color-shadow);
+}
+.nav-logo { display: flex; align-items: center; }
+.nav-logo img { width: auto; }
+.logo-full { height: 32px; display: block; }
+.logo-badge { height: 36px; display: none; }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-full.logo-light { display: none; }
+[data-theme="dark"] .logo-full.logo-dark { display: block; }
+@media (max-width: 640px) {
+  .logo-full { display: none !important; }
+  .logo-badge.logo-light { display: block; }
+}
+@media (max-width: 640px) {
+  [data-theme="dark"] .logo-badge.logo-light { display: none; }
+  [data-theme="dark"] .logo-badge.logo-dark { display: block; }
+}
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-back {
+  display: flex; align-items: center; gap: 6px; font-size: 14px;
+  color: var(--color-text-secondary); text-decoration: none; transition: color 0.2s;
+}
+.nav-back:hover { color: var(--color-green-light); }
+.theme-toggle {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 44px; height: 44px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--color-text-secondary);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transition: all 0.2s; z-index: 50;
+}
+.theme-toggle:hover { border-color: var(--color-green-light); color: var(--color-green-light); box-shadow: 0 4px 24px rgba(0,0,0,0.18); }
+
+/* ─── BOOKING SHELL ───────────────────────────── */
+.booking-shell {
+  padding-top: var(--nav-height);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── STEP PROGRESS BAR ───────────────────────── */
+.step-header {
+  padding: 0 48px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-surface);
+  display: flex; align-items: center; gap: 0;
+  justify-content: space-between;
+}
+.step-progress {
+  display: flex; align-items: center;
+  padding: 20px 0;
+}
+.step-pip { display: flex; align-items: center; gap: 10px; }
+.step-circle {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  transition: all 0.2s;
+}
+.step-circle.done   { background: var(--color-green-primary); color: #fff; border: 2px solid var(--color-green-primary); }
+.step-circle.active { background: var(--color-bg-surface); color: var(--color-green-primary); border: 2px solid var(--color-green-primary); }
+.step-circle.pending{ background: var(--color-bg-elevated); color: var(--color-text-secondary); border: 2px solid var(--color-border); }
+.step-label { font-size: 13px; font-weight: 500; white-space: nowrap; }
+.step-label.active  { color: var(--color-text-primary); }
+.step-label.done, .step-label.pending { color: var(--color-text-secondary); }
+.step-connector { width: 40px; height: 1px; background: var(--color-border); margin: 0 12px; flex-shrink: 0; }
+.step-connector.done { background: var(--color-green-primary); opacity: 0.5; }
+
+/* ─── MAIN CONTENT AREA ───────────────────────── */
+.booking-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+}
+
+/* ─── LEFT PANEL (calendar) ───────────────────── */
+.calendar-panel {
+  display: flex; flex-direction: column;
+  border-right: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+/* Calendar toolbar */
+.cal-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-surface);
+  flex-shrink: 0;
+}
+.cal-toolbar-left { display: flex; align-items: center; gap: 12px; }
+
+.btn-today {
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  padding: 7px 16px; border-radius: 8px; cursor: pointer;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-elevated); color: var(--color-text-secondary);
+  transition: all 0.15s;
+}
+.btn-today:hover { border-color: var(--color-green-light); color: var(--color-green-light); }
+
+.cal-week-nav { display: flex; align-items: center; gap: 4px; }
+.cal-arrow {
+  width: 32px; height: 32px; border-radius: 7px;
+  background: var(--color-bg-elevated); border: 1px solid var(--color-border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--color-text-secondary); transition: all 0.15s;
+}
+.cal-arrow:hover { border-color: var(--color-green-light); color: var(--color-green-light); }
+.cal-week-label {
+  font-family: var(--font-display); font-size: 18px; font-weight: 400;
+  letter-spacing: -0.01em; color: var(--color-text-primary);
+  padding: 0 10px; white-space: nowrap;
+}
+
+/* Bay filter chips */
+.bay-chips { display: flex; align-items: center; gap: 8px; }
+.bay-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em;
+  text-transform: uppercase; cursor: pointer; transition: all 0.15s;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-elevated); color: var(--color-text-secondary);
+}
+.bay-chip.active { color: #fff; border-color: transparent; }
+.bay-chip.active .bay-chip-dot { background: rgba(255,255,255,0.75); }
+.bay-chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.chip-highlands.active  { background: var(--color-green-primary); }
+.chip-masters.active    { background: var(--color-gold); }
+.chip-links.active      { background: #3A6B8A; }
+.chip-augusta.active    { background: #7A4A8C; }
+.chip-highlands .bay-chip-dot { background: var(--color-green-primary); }
+.chip-masters   .bay-chip-dot { background: var(--color-gold); }
+.chip-links     .bay-chip-dot { background: #3A6B8A; }
+.chip-augusta   .bay-chip-dot { background: #7A4A8C; }
+
+/* View toggle */
+.view-toggle { display: flex; gap: 0; }
+.view-btn {
+  padding: 7px 14px; font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+  border: 1px solid var(--color-border); background: var(--color-bg-elevated);
+  color: var(--color-text-secondary); transition: all 0.15s;
+}
+.view-btn:first-child { border-radius: 8px 0 0 8px; }
+.view-btn:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
+.view-btn.active { background: var(--color-green-primary); color: #fff; border-color: var(--color-green-primary); }
+
+/* ─── THE CALENDAR GRID ───────────────────────── */
+.cal-grid-wrap {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  background: var(--color-bg-surface);
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: 56px repeat(7, minmax(100px, 1fr));
+  min-width: 820px;
+}
+
+/* Day header row */
+.cal-day-header { position: sticky; top: 0; z-index: 10; display: contents; }
+.cal-gutter-corner {
+  position: sticky; top: 0; background: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  z-index: 11;
+}
+.cal-day-head {
+  position: sticky; top: 0;
+  padding: 12px 8px 10px;
+  text-align: center;
+  background: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  z-index: 10;
+}
+.cal-day-name {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 4px;
+}
+.cal-day-num {
+  font-family: var(--font-display); font-size: 22px; font-weight: 400;
+  line-height: 1; color: var(--color-text-primary);
+}
+.cal-day-head.today .cal-day-num {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--color-green-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto;
+}
+.cal-day-head.today .cal-day-name { color: var(--color-green-light); }
+
+/* Time rows */
+.cal-time-rows { display: contents; }
+.cal-time-label {
+  padding: 0 8px 0 0;
+  text-align: right;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em;
+  color: var(--color-text-secondary); opacity: 0.6;
+  display: flex; align-items: flex-start; justify-content: flex-end;
+  padding-top: 6px;
+  height: var(--slot-h);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(27,104,68,0.05);
+  white-space: nowrap;
+}
+.cal-cell {
+  height: var(--slot-h);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(27,104,68,0.05);
+  padding: 3px;
+  position: relative;
+  transition: background 0.1s;
+}
+.cal-cell:hover { background: var(--color-green-subtle); cursor: pointer; }
+.cal-cell:last-child { border-right: none; }
+
+/* Event cards */
+.cal-event {
+  width: 100%; height: 100%;
+  border-radius: 6px; padding: 5px 8px;
+  display: flex; flex-direction: column; justify-content: center;
+  font-size: 11px; line-height: 1.3; cursor: pointer;
+  transition: all 0.15s; position: relative; overflow: hidden;
+  border-left: 3px solid transparent;
+}
+.cal-event.booked {
+  background: rgba(89,103,96,0.07);
+  border-left-color: rgba(89,103,96,0.3);
+  color: var(--color-text-secondary);
+  cursor: default; opacity: 0.7;
+}
+.cal-event.selected {
+  background: rgba(166,124,36,0.12);
+  border-left-color: var(--color-gold);
+  color: var(--color-text-primary);
+  box-shadow: 0 0 0 1.5px var(--color-gold);
+}
+.cal-event.selected:hover { background: rgba(166,124,36,0.18); }
+
+/* Multi-hour event spanning */
+.cal-event-span {
+  position: absolute; left: 3px; right: 3px; top: 3px;
+  border-radius: 6px; padding: 7px 10px;
+  font-size: 11px; line-height: 1.4; z-index: 2;
+  border-left: 3px solid transparent;
+}
+.cal-event-span.booked {
+  background: rgba(89,103,96,0.08);
+  border-left-color: rgba(89,103,96,0.35);
+  color: var(--color-text-secondary);
+}
+.cal-event-span.bay-highlands { border-left-color: var(--color-green-primary); background: rgba(27,104,68,0.08); color: var(--color-green-primary); }
+.cal-event-span.bay-masters   { border-left-color: var(--color-gold); background: rgba(166,124,36,0.08); color: var(--color-gold); }
+.cal-event-span.bay-links     { border-left-color: #3A6B8A; background: rgba(58,107,138,0.08); color: #3A6B8A; }
+.cal-event-span.bay-augusta   { border-left-color: #7A4A8C; background: rgba(122,74,140,0.08); color: #7A4A8C; }
+
+.cal-event-time { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; opacity: 0.7; margin-bottom: 2px; }
+.cal-event-name { font-weight: 600; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-event-meta { font-size: 10px; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ─── RIGHT SIDEBAR ───────────────────────────── */
+.booking-sidebar {
+  padding: 32px 28px;
+  background: var(--color-bg-surface);
+  display: flex; flex-direction: column; gap: 0;
+  overflow-y: auto;
+}
+.sidebar-eyebrow {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 20px;
+}
+.slot-callout {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 14px; padding: 20px; margin-bottom: 20px;
+}
+.slot-callout.has-selection {
+  border-color: var(--color-gold);
+  background: rgba(166,124,36,0.04);
+}
+.slot-detail-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+}
+.slot-detail-row:last-child { border-bottom: none; padding-bottom: 0; }
+.slot-detail-label { color: var(--color-text-secondary); }
+.slot-detail-value { font-weight: 500; color: var(--color-text-primary); }
+.slot-bay-change {
+  font-size: 11px; font-weight: 400; color: var(--color-text-secondary);
+  text-decoration: underline; margin-left: 8px; cursor: pointer;
+  transition: color 0.15s;
+}
+.slot-bay-change:hover { color: var(--color-green-light); }
+
+/* Duration picker */
+.duration-section { margin-bottom: 20px; }
+.duration-label {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 10px;
+}
+.duration-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.duration-pill {
+  padding: 7px 14px; border-radius: 7px; font-size: 13px; font-weight: 500;
+  cursor: pointer; border: 1.5px solid var(--color-border);
+  color: var(--color-text-secondary); background: var(--color-bg-elevated);
+  transition: all 0.15s;
+}
+.duration-pill:hover { border-color: var(--color-green-light); color: var(--color-green-light); }
+.duration-pill.selected { background: var(--color-green-primary); color: #fff; border-color: var(--color-green-primary); }
+
+/* Player stepper */
+.player-section { margin-bottom: 24px; }
+.player-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.player-stepper {
+  display: flex; align-items: center; gap: 0;
+  border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden;
+}
+.player-btn {
+  width: 36px; height: 36px; background: var(--color-bg-elevated);
+  border: none; cursor: pointer; font-size: 18px; font-weight: 300;
+  color: var(--color-text-primary); display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.player-btn:hover { background: var(--color-bg-base); }
+.player-count-val {
+  min-width: 48px; text-align: center;
+  font-family: var(--font-display); font-size: 20px; font-weight: 300;
+  color: var(--color-text-primary); border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border); line-height: 36px;
+}
+.player-hint { font-size: 12px; color: var(--color-text-secondary); margin-top: 6px; }
+
+/* Price preview */
+.price-preview {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 0; border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border); margin-bottom: 16px;
+}
+.price-preview-label { font-size: 13px; font-weight: 600; color: var(--color-text-primary); }
+.price-preview-value {
+  font-family: var(--font-display); font-size: 26px; font-weight: 300;
+  letter-spacing: -0.02em; color: var(--color-text-primary);
+}
+.price-preview-value.empty { opacity: 0.3; }
+
+/* CTA */
+.sidebar-cta {
+  display: block; width: 100%;
+  background: var(--color-gold); color: #141A16;
+  font-family: var(--font-body); font-size: 15px; font-weight: 700;
+  padding: 15px; border-radius: 10px; border: none;
+  text-align: center; cursor: pointer; margin-bottom: 10px;
+  transition: background 0.2s; text-decoration: none;
+}
+.sidebar-cta:hover { background: var(--color-gold-light); }
+.sidebar-cta:disabled, .sidebar-cta.disabled {
+  opacity: 0.45; cursor: not-allowed; pointer-events: none;
+}
+.sidebar-note {
+  display: flex; align-items: center; gap: 7px; margin-top: 10px;
+  font-size: 12px; color: var(--color-text-secondary); line-height: 1.4;
+}
+.sidebar-note svg { flex-shrink: 0; color: var(--color-green-light); }
+
+/* ─── FOCUS & A11Y ────────────────────────────── */
+*:focus-visible { outline: 2px solid var(--color-green-vivid); outline-offset: 2px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.skip-link { position: absolute; left: -9999px; top: 16px; z-index: 9999; }
+.skip-link:focus-visible { left: 16px; background: var(--color-green-primary); color: #F4F1EC; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: 600; }
+
+/* ─── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 1100px) {
+  .booking-body { grid-template-columns: 1fr; }
+  .booking-sidebar { display: none; }
+  .calendar-panel { border-right: none; }
+  .view-toggle { display: none; }
+  .bay-chips { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
+  .bay-chip { flex-shrink: 0; }
+}
+@media (max-width: 768px) {
+  .step-header { padding: 0 24px; }
+}
+@media (max-width: 640px) {
+  nav { padding: 0 20px; }
+  .step-label { display: none; }
+  .cal-toolbar { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+  .cal-toolbar-left { flex-wrap: wrap; gap: 8px; width: 100%; }
+  .bay-chips { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; width: 100%; }
+  .bay-chip { flex-shrink: 0; }
+  .view-toggle { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- NAV -->
+<nav aria-label="Main navigation">
+  <div class="nav-logo">
+    <img class="logo-full logo-light" src="../assets/logos/the-golf-room-logo-light.svg" alt="The Golf Room" />
+    <img class="logo-full logo-dark"  src="../assets/logos/the-golf-room-logo-dark.svg"  alt="The Golf Room" />
+    <img class="logo-badge logo-light" src="../assets/logos/badge-logo-light.svg" alt="The Golf Room" />
+    <img class="logo-badge logo-dark"  src="../assets/logos/badge-logo-dark.svg"  alt="The Golf Room" />
+  </div>
+  <div class="nav-right">
+    <a class="nav-back" href="bays.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Bays
+    </a>
+  </div>
+</nav>
+
+<main id="main-content">
+<h1 class="visually-hidden">Book a Bay — Date &amp; Time</h1>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  STEP 1 — PICK DATE & TIME (Weekly Calendar)   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="booking-shell" id="step1">
+  <div class="booking-body">
+    <!-- ── Weekly Calendar ── -->
+    <div class="calendar-panel">
+      <!-- Toolbar -->
+      <div class="cal-toolbar">
+        <div class="cal-toolbar-left">
+          <button class="btn-today">Today</button>
+          <div class="cal-week-nav">
+            <div class="cal-arrow" role="button" aria-label="Previous week">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </div>
+            <span class="cal-week-label">Apr 6 – 12, 2026</span>
+            <div class="cal-arrow" role="button" aria-label="Next week">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <!-- Bay filter -->
+          <div class="bay-chips" role="group" aria-label="Filter by bay">
+            <div class="bay-chip chip-highlands active" role="button" aria-pressed="true"><span class="bay-chip-dot"></span>Highlands</div>
+            <div class="bay-chip chip-masters active" role="button" aria-pressed="true"><span class="bay-chip-dot"></span>Masters</div>
+            <div class="bay-chip chip-links active" role="button" aria-pressed="true"><span class="bay-chip-dot"></span>Links</div>
+            <div class="bay-chip chip-augusta active" role="button" aria-pressed="true"><span class="bay-chip-dot"></span>Augusta</div>
+          </div>
+        </div>
+        <div class="view-toggle" role="group" aria-label="Calendar view">
+          <button class="view-btn">Month</button>
+          <button class="view-btn active">Week</button>
+          <button class="view-btn">Day</button>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="cal-grid-wrap">
+        <div class="cal-grid" role="grid" aria-label="Weekly availability calendar">
+
+          <!-- ── Header row ── -->
+          <div class="cal-gutter-corner" role="columnheader"></div>
+          <div class="cal-day-head" role="columnheader">
+            <div class="cal-day-name">Mon</div>
+            <div class="cal-day-num">6</div>
+          </div>
+          <div class="cal-day-head today" role="columnheader">
+            <div class="cal-day-name">Tue</div>
+            <div class="cal-day-num">7</div>
+          </div>
+          <div class="cal-day-head" role="columnheader">
+            <div class="cal-day-name">Wed</div>
+            <div class="cal-day-num">8</div>
+          </div>
+          <div class="cal-day-head" role="columnheader">
+            <div class="cal-day-name">Thu</div>
+            <div class="cal-day-num">9</div>
+          </div>
+          <div class="cal-day-head" role="columnheader">
+            <div class="cal-day-name">Fri</div>
+            <div class="cal-day-num">10</div>
+          </div>
+          <div class="cal-day-head" role="columnheader">
+            <div class="cal-day-name">Sat</div>
+            <div class="cal-day-num">11</div>
+          </div>
+          <div class="cal-day-head" role="columnheader">
+            <div class="cal-day-name">Sun</div>
+            <div class="cal-day-num">12</div>
+          </div>
+
+          <!-- ── 8 AM ── -->
+          <div class="cal-time-label">8 AM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 8 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 8 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 8 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 8 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 8 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 8 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 8 AM"></div>
+
+          <!-- ── 9 AM ── -->
+          <div class="cal-time-label">9 AM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 9 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 9 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 9 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 9 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 9 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 9 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 9 AM"></div>
+
+          <!-- ── 10 AM ── -->
+          <div class="cal-time-label">10 AM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 10 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 10 AM">
+            <div class="cal-event-span bay-highlands" style="height:calc(var(--slot-h)*2 - 6px);">
+              <div class="cal-event-time">10:00 AM – 12:00 PM</div>
+              <div class="cal-event-name">Highlands Bay</div>
+              <div class="cal-event-meta">J. Mitchell &bull; 2 players</div>
+            </div>
+          </div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 10 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 10 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 10 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 10 AM">
+            <div class="cal-event selected" aria-selected="true">
+              <div class="cal-event-time">10:00 AM</div>
+              <div class="cal-event-name">Selected ✓</div>
+            </div>
+          </div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 10 AM"></div>
+
+          <!-- ── 11 AM ── -->
+          <div class="cal-time-label">11 AM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 11 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 11 AM"></div><!-- covered by Highlands 10-12 -->
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 11 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 11 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 11 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 11 AM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 11 AM">
+            <div class="cal-event-span bay-highlands" style="height:calc(var(--slot-h)*2 - 6px);">
+              <div class="cal-event-time">11:00 AM – 1:00 PM</div>
+              <div class="cal-event-name">Highlands Bay</div>
+              <div class="cal-event-meta">S. Park &bull; 4 players</div>
+            </div>
+          </div>
+
+          <!-- ── 12 PM ── -->
+          <div class="cal-time-label">12 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 12 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 12 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 12 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 12 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 12 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 12 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 12 PM"></div><!-- covered by Highlands 11-1 -->
+
+          <!-- ── 1 PM ── -->
+          <div class="cal-time-label">1 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 1 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 1 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 1 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 1 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 1 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 1 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 1 PM"></div>
+
+          <!-- ── 2 PM ── -->
+          <div class="cal-time-label">2 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 2 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 2 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 2 PM">
+            <div class="cal-event-span bay-links" style="height:calc(var(--slot-h)*2 - 6px);">
+              <div class="cal-event-time">2:00 – 4:00 PM</div>
+              <div class="cal-event-name">Links Bay</div>
+              <div class="cal-event-meta">R. Davis &bull; 3 players</div>
+            </div>
+          </div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 2 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 2 PM">
+            <div class="cal-event-span bay-augusta" style="height:calc(var(--slot-h)*2 - 6px);">
+              <div class="cal-event-time">2:00 – 4:00 PM</div>
+              <div class="cal-event-name">Augusta Bay</div>
+              <div class="cal-event-meta">A. Nair &bull; 4 players</div>
+            </div>
+          </div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 2 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 2 PM"></div>
+
+          <!-- ── 3 PM ── -->
+          <div class="cal-time-label">3 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 3 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 3 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 3 PM"></div><!-- covered by Links 2-4 -->
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 3 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 3 PM"></div><!-- covered by Augusta 2-4 -->
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 3 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 3 PM"></div>
+
+          <!-- ── 4 PM ── -->
+          <div class="cal-time-label">4 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 4 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 4 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 4 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 4 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 4 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 4 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 4 PM"></div>
+
+          <!-- ── 5 PM ── -->
+          <div class="cal-time-label">5 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 5 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 5 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 5 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 5 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 5 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 5 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 5 PM"></div>
+
+          <!-- ── 6 PM ── -->
+          <div class="cal-time-label">6 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 6 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 6 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 6 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 6 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 6 PM">
+            <div class="cal-event-span bay-masters" style="height:calc(var(--slot-h)*2 - 6px);">
+              <div class="cal-event-time">6:00 – 8:00 PM</div>
+              <div class="cal-event-name">Masters Suite</div>
+              <div class="cal-event-meta">T. Chen &bull; 4 players</div>
+            </div>
+          </div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 6 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 6 PM"></div>
+
+          <!-- ── 7 PM ── -->
+          <div class="cal-time-label">7 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 7 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 7 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 7 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 7 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 7 PM"></div><!-- covered by Masters 6-8 -->
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 7 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 7 PM"></div>
+
+          <!-- ── 8 PM ── -->
+          <div class="cal-time-label">8 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 8 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 8 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 8 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 8 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 8 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 8 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 8 PM"></div>
+
+          <!-- ── 9 PM ── -->
+          <div class="cal-time-label">9 PM</div>
+          <div class="cal-cell" role="gridcell" aria-label="Monday 9 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Tuesday 9 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Wednesday 9 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Thursday 9 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Friday 9 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Saturday 9 PM"></div>
+          <div class="cal-cell" role="gridcell" aria-label="Sunday 9 PM"></div>
+
+        </div><!-- /cal-grid -->
+      </div><!-- /cal-grid-wrap -->
+    </div><!-- /calendar-panel -->
+
+    <!-- ── Right Sidebar ── -->
+    <div class="booking-sidebar">
+      <div class="sidebar-eyebrow">Your Selection</div>
+
+      <!-- Slot callout — pre-populated (user came from bays page) -->
+      <div class="slot-callout has-selection" style="margin-bottom:20px;">
+        <div class="slot-detail-row">
+          <span class="slot-detail-label">Bay</span>
+          <span class="slot-detail-value">
+            The Masters Suite
+            <a class="slot-bay-change" href="bays.html" aria-label="Change selected bay">Change</a>
+          </span>
+        </div>
+        <div class="slot-detail-row">
+          <span class="slot-detail-label">Date</span>
+          <span class="slot-detail-value">Sat, Apr 11</span>
+        </div>
+        <div class="slot-detail-row">
+          <span class="slot-detail-label">Start time</span>
+          <span class="slot-detail-value">10:00 AM</span>
+        </div>
+      </div>
+
+      <!-- Duration -->
+      <div class="duration-section">
+        <div class="duration-label">Duration</div>
+        <div class="duration-pills">
+          <div class="duration-pill">1 hr</div>
+          <div class="duration-pill selected">2 hrs</div>
+          <div class="duration-pill">3 hrs</div>
+          <div class="duration-pill">4 hrs</div>
+        </div>
+      </div>
+
+      <!-- Players -->
+      <div class="player-section">
+        <div class="duration-label">Players</div>
+        <div class="player-row">
+          <div class="player-stepper">
+            <button class="player-btn" aria-label="Decrease player count">&#8722;</button>
+            <div class="player-count-val" aria-live="polite" aria-atomic="true">4</div>
+            <button class="player-btn" aria-label="Increase player count">+</button>
+          </div>
+          <span style="font-size:13px; color:var(--color-text-secondary);">Max 8</span>
+        </div>
+        <p class="player-hint">All bays accommodate 1–8 players.</p>
+      </div>
+
+      <!-- Estimated price -->
+      <div class="price-preview">
+        <span class="price-preview-label">Est. total</span>
+        <span class="price-preview-value">$240</span>
+      </div>
+
+      <a class="sidebar-cta" href="booking-confirm.html">Continue to Confirm &rarr;</a>
+      <div class="sidebar-note">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Free cancellation up to 24 hrs before your session
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div role="alert" aria-live="polite" aria-atomic="true" id="live-region" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"></div>
+
+<script>
+  const moonSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  const sunSVG  = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+  const root = document.documentElement;
+  if (localStorage.getItem('golf-room-theme') === 'dark') root.setAttribute('data-theme', 'dark');
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('theme-toggle');
+    if (localStorage.getItem('golf-room-theme') === 'dark') toggle.innerHTML = sunSVG;
+    toggle.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        toggle.innerHTML = moonSVG;
+        localStorage.setItem('golf-room-theme', 'light');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        toggle.innerHTML = sunSVG;
+        localStorage.setItem('golf-room-theme', 'dark');
+      }
+    });
+  });
+
+  /* Click any empty cal-cell to select it */
+  document.querySelectorAll('.cal-cell').forEach(cell => {
+    if (cell.querySelector('.cal-event-span, .cal-event.selected')) return;
+    cell.addEventListener('click', () => {
+      document.querySelectorAll('.cal-cell .cal-event.selected').forEach(s => s.remove());
+      const sel = document.createElement('div');
+      sel.className = 'cal-event selected';
+      sel.setAttribute('aria-selected', 'true');
+      sel.innerHTML = `<div class="cal-event-time">Selected</div><div class="cal-event-name">✓</div>`;
+      cell.appendChild(sel);
+    });
+  });
+
+  /* Bay chip toggle */
+  document.querySelectorAll('.bay-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const pressed = chip.classList.toggle('active');
+      chip.setAttribute('aria-pressed', pressed.toString());
+    });
+  });
+
+  /* Duration pill selection */
+  document.querySelectorAll('.duration-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.duration-pill').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+    });
+  });
+
+  /* Player stepper */
+  const countEl = document.querySelector('.player-count-val');
+  let playerCount = parseInt(countEl.textContent, 10);
+  document.querySelectorAll('.player-btn').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      if (i === 0 && playerCount > 1) playerCount--;
+      if (i === 1 && playerCount < 8) playerCount++;
+      countEl.textContent = playerCount;
+    });
+  });
+</script>
+
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+
+</body>
+</html>

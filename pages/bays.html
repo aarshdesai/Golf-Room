@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Golf Room — Choose Your Bay</title>
+<link rel="icon" href="../assets/logos/mogogram-logo-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../assets/logos/mogogram-logo-dark.svg"  type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-bg-base:       #F4F1EC;
+    --color-bg-surface:    #FFFFFF;
+    --color-bg-elevated:   #EBE7E0;
+    --color-bg-overlay:    rgba(244,241,236,0.94);
+    --color-green-primary: #1B6844;
+    --color-green-light:   #2F8A5A;
+    --color-green-vivid:   #3DA96C;
+    --color-gold:          #A67C24;
+    --color-gold-light:    #C4982E;
+    --color-text-primary:  #141A16;
+    --color-text-secondary:#596760;
+    --color-text-inverse:  #F4F1EC;
+    --color-border:        rgba(27,104,68,0.13);
+    --color-border-strong: rgba(166,124,36,0.3);
+    --color-shadow:        0 2px 12px rgba(0,0,0,0.07);
+    --color-shadow-lg:     0 8px 40px rgba(0,0,0,0.11);
+    --color-error:         #C0443A;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body:    'DM Sans', system-ui, sans-serif;
+    --font-mono:    'DM Mono', monospace;
+  }
+
+  [data-theme="dark"] {
+    --color-bg-base:       #0A0E0B;
+    --color-bg-surface:    #111714;
+    --color-bg-elevated:   #1A211E;
+    --color-bg-overlay:    rgba(10,14,11,0.9);
+    --color-green-primary: #1B6844;
+    --color-green-light:   #3DA96C;
+    --color-green-vivid:   #3DA96C;
+    --color-gold:          #C9A84C;
+    --color-gold-light:    #E2C17A;
+    --color-text-primary:  #F0EDE6;
+    --color-text-secondary:#9DA89E;
+    --color-text-inverse:  #141A16;
+    --color-border:        rgba(47,138,90,0.80);
+    --color-border-strong: rgba(201,168,76,0.60);
+    --color-shadow:        0 2px 12px rgba(0,0,0,0.35);
+    --color-shadow-lg:     0 8px 40px rgba(0,0,0,0.55);
+    --color-error:         #E07070;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 64px; height: 72px;
+    background: var(--color-bg-overlay);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--color-shadow);
+  }
+  .nav-logo { display: flex; align-items: center; }
+  .nav-logo img { width: auto; }
+  .logo-full { height: 32px; display: block; }
+  .logo-badge { height: 36px; display: none; }
+  .logo-dark { display: none; }
+  [data-theme="dark"] .logo-full.logo-light { display: none; }
+  [data-theme="dark"] .logo-full.logo-dark { display: block; }
+  @media (max-width: 640px) {
+    .logo-full { display: none !important; }
+    .logo-badge.logo-light { display: block; }
+  }
+  @media (max-width: 640px) {
+    [data-theme="dark"] .logo-badge.logo-light { display: none; }
+    [data-theme="dark"] .logo-badge.logo-dark { display: block; }
+  }
+  .nav-actions { display: flex; align-items: center; gap: 12px; }
+  .theme-toggle {
+    position: fixed; bottom: 24px; right: 24px;
+    width: 44px; height: 44px;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--color-text-secondary);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    transition: all 0.2s; z-index: 50;
+  }
+  .theme-toggle:hover { border-color: var(--color-green-light); color: var(--color-green-light); box-shadow: 0 4px 24px rgba(0,0,0,0.18); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-body); font-weight: 500;
+    border: none; cursor: pointer; text-decoration: none;
+    white-space: nowrap; transition: all 0.2s;
+  }
+  .btn-primary { background: var(--color-gold); color: #141A16; font-weight: 600; padding: 12px 24px; border-radius: 8px; font-size: 14px; }
+  .btn-primary:hover { background: var(--color-gold-light); }
+  .btn-ghost { background: transparent; color: var(--color-text-secondary); padding: 12px 20px; border-radius: 8px; font-size: 14px; border: 1px solid var(--color-border); }
+  .btn-ghost:hover { border-color: var(--color-green-light); color: var(--color-green-light); }
+
+  *:focus-visible { outline: 2px solid var(--color-green-vivid); outline-offset: 2px; }
+
+  /* ===== SKIP LINK ===== */
+  .skip-link { position: absolute; left: -9999px; top: var(--space-4); z-index: 9999; }
+  .skip-link:focus-visible { left: var(--space-4); background: var(--color-green-primary); color: var(--color-text-inverse); padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); text-decoration: none; font-size: 14px; font-weight: 600; }
+
+  /* ===== PAGE LAYOUT ===== */
+  .page-wrap {
+    padding-top: 72px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== PAGE HEADER ===== */
+  .page-header {
+    padding: 48px 64px 40px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-surface);
+  }
+  .page-header-top {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 32px;
+  }
+  .page-eyebrow {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--color-green-light); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow-line { width: 20px; height: 1px; background: var(--color-green-light); opacity: 0.6; }
+  .page-title {
+    font-family: var(--font-display); font-size: 48px; font-weight: 300;
+    letter-spacing: -0.02em; line-height: 1.05; color: var(--color-text-primary);
+  }
+  .page-title em { font-style: italic; color: var(--color-green-vivid); }
+  .page-meta { font-size: 15px; color: var(--color-text-secondary); }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; width: 100%;
+  }
+
+  .filter-group {
+    display: flex; align-items: center; gap: 0;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border); border-radius: 10px;
+    overflow: hidden; flex: 1;
+  }
+
+  .filter-field {
+    padding: 10px 16px; display: flex; flex-direction: column; gap: 2px;
+    border-right: 1px solid var(--color-border); cursor: pointer;
+    transition: background 0.15s; min-width: 0; flex: 1;
+  }
+  .filter-field:last-child { border-right: none; }
+  .filter-field:hover { background: var(--color-bg-surface); }
+  .filter-field-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-secondary); }
+  .filter-field-value { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .filter-field-value.placeholder { color: var(--color-text-secondary); font-weight: 400; }
+
+  .filter-search-btn {
+    background: var(--color-green-primary); color: #FFF;
+    border: none; padding: 0 20px; height: 100%;
+    font-family: var(--font-body); font-size: 13px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: background 0.2s;
+    border-radius: 0 8px 8px 0; min-height: 56px;
+  }
+  .filter-search-btn:hover { background: var(--color-green-light); }
+
+  .filter-sep { width: 1px; height: 24px; background: var(--color-border); align-self: center; }
+
+  .chip-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  .filter-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--color-border);
+    background: var(--color-bg-surface); color: var(--color-text-secondary);
+    transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .filter-chip.active { background: var(--color-green-primary); color: #FFF; border-color: var(--color-green-primary); }
+  .filter-chip:hover:not(.active) { border-color: var(--color-green-light); color: var(--color-green-light); }
+
+  /* ===== CONTENT AREA ===== */
+  .content-area {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    min-height: calc(100vh - 72px - 180px);
+  }
+
+  /* ===== GRID PANEL ===== */
+  .grid-panel {
+    padding: 40px 64px 64px;
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+  }
+
+  .grid-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 28px;
+  }
+  .grid-count {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-secondary);
+  }
+  .grid-sort {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--color-text-secondary); cursor: pointer;
+  }
+
+  .bays-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  /* Bay card */
+  .bay-card {
+    background: var(--color-bg-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 20px; overflow: hidden;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: var(--color-shadow);
+  }
+  .bay-card:hover { border-color: var(--color-green-light); box-shadow: var(--color-shadow-lg); transform: translateY(-2px); }
+  .bay-card.active { border-color: var(--color-green-primary); box-shadow: 0 0 0 4px rgba(27,104,68,0.1), var(--color-shadow-lg); }
+
+  .bay-card-img {
+    width: 100%; height: 200px;
+    position: relative; overflow: hidden;
+    display: flex; align-items: flex-end;
+  }
+
+  /* Each bay has a slightly different dark-forest palette */
+  .bay-card-img.highlands { background: linear-gradient(160deg, #1C3D2A 0%, #152C1D 50%, #0F2016 100%); }
+  .bay-card-img.masters   { background: linear-gradient(160deg, #1A3328 0%, #122820 50%, #0D1C15 100%); }
+  .bay-card-img.links     { background: linear-gradient(160deg, #1E3A22 0%, #162C1A 50%, #102012 100%); }
+  .bay-card-img.augusta   { background: linear-gradient(160deg, #1B3526 0%, #142A1E 50%, #0F1E15 100%); }
+  .bay-card-img.pebble    { background: linear-gradient(160deg, #152C22 0%, #10221A 50%, #0C1812 100%); }
+  .bay-card-img.st-andrews{ background: linear-gradient(160deg, #1D3A24 0%, #162D1C 50%, #102014 100%); }
+
+  .bay-card-img::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 30%, rgba(10,14,11,0.8) 100%);
+    z-index: 1;
+  }
+
+  .bay-card-img-placeholder {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.15);
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%); z-index: 0;
+  }
+
+  .bay-card-img-footer {
+    position: relative; z-index: 2;
+    width: 100%; padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+
+  .bay-num {
+    font-family: var(--font-display); font-size: 56px; font-weight: 300;
+    color: rgba(255,255,255,0.12); line-height: 1; letter-spacing: -0.02em;
+    position: absolute; top: 12px; right: 16px; z-index: 2;
+  }
+
+  .bay-name-over {
+    font-family: var(--font-display); font-size: 22px; font-weight: 300;
+    letter-spacing: -0.01em; color: #F0EDE6; line-height: 1.1;
+  }
+  .bay-name-over small {
+    display: block; font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: rgba(240,237,230,0.5);
+    margin-top: 4px; font-weight: 400;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 8px; border-radius: 4px;
+  }
+  .badge-available { background: rgba(61,169,108,0.2); color: #74D4A4; border: 1px solid rgba(61,169,108,0.3); }
+  .badge-premium   { background: rgba(201,168,76,0.2); color: #E2C17A; border: 1px solid rgba(201,168,76,0.3); }
+  .badge-busy      { background: rgba(192,68,58,0.2); color: #F08080; border: 1px solid rgba(192,68,58,0.3); }
+  .badge-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+
+  .bay-card-body { padding: 20px; }
+
+  .bay-card-specs {
+    display: flex; gap: 20px; margin-bottom: 16px;
+  }
+  .bay-spec {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .bay-spec-label {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-secondary);
+  }
+  .bay-spec-value { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+
+  .bay-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .bay-tag {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 4px;
+    border: 1px solid var(--color-border); color: var(--color-text-secondary);
+    background: var(--color-bg-elevated);
+  }
+
+  .bay-card-footer-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 16px; border-top: 1px solid var(--color-border);
+  }
+  .bay-price { font-size: 20px; font-weight: 600; color: var(--color-text-primary); }
+  .bay-price-unit { font-size: 12px; font-weight: 400; color: var(--color-text-secondary); }
+
+  /* Unavailable overlay */
+  .bay-card.unavailable { opacity: 0.5; pointer-events: none; }
+
+  /* ===== DETAIL DRAWER ===== */
+  .detail-drawer {
+    background: var(--color-bg-surface);
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+    border-left: 1px solid var(--color-border);
+    position: sticky; top: 72px;
+    max-height: calc(100vh - 72px);
+  }
+
+  .drawer-hero {
+    width: 100%; height: 260px;
+    background: linear-gradient(160deg, #1A3328 0%, #122820 40%, #0D1C15 100%);
+    position: relative; display: flex; align-items: flex-end; flex-shrink: 0;
+  }
+  .drawer-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(10,14,11,0.85) 100%);
+  }
+  .drawer-hero-content {
+    position: relative; z-index: 1; padding: 24px 32px; width: 100%;
+  }
+  .drawer-hero-num {
+    font-family: var(--font-display); font-size: 80px; font-weight: 300;
+    color: rgba(255,255,255,0.08); line-height: 1; letter-spacing: -0.03em;
+    position: absolute; top: 16px; right: 20px; z-index: 1;
+  }
+  .drawer-hero-badge { margin-bottom: 10px; }
+  .drawer-hero-name {
+    font-family: var(--font-display); font-size: 32px; font-weight: 300;
+    letter-spacing: -0.02em; color: #F0EDE6; line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .drawer-hero-sub {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: rgba(240,237,230,0.5);
+  }
+  .drawer-hero-placeholder {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.12);
+    z-index: 0;
+  }
+
+  .drawer-body { padding: 32px; flex: 1; overflow-y: auto; }
+
+  .drawer-section { margin-bottom: 32px; }
+  .drawer-section-title {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--color-text-secondary); margin-bottom: 16px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--color-border);
+  }
+
+  /* Spec grid */
+  .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .spec-item { display: flex; flex-direction: column; gap: 4px; }
+  .spec-item-label {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-secondary);
+  }
+  .spec-item-value { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+
+  /* Features list */
+  .features-list { display: flex; flex-direction: column; gap: 10px; }
+  .feature-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px; color: var(--color-text-primary);
+  }
+  .feature-item::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--color-green-vivid); flex-shrink: 0;
+  }
+
+  /* Mini availability calendar */
+  .avail-row {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    margin-bottom: 8px;
+  }
+  .avail-day-label {
+    text-align: center; font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--color-text-secondary); padding: 4px 0;
+  }
+  .avail-day {
+    aspect-ratio: 1; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; cursor: pointer; transition: all 0.15s;
+    color: var(--color-text-primary);
+  }
+  .avail-day:hover:not(.busy):not(.selected) { background: var(--color-bg-elevated); }
+  .avail-day.selected { background: var(--color-green-primary); color: #FFF; font-weight: 600; }
+  .avail-day.busy { color: var(--color-text-secondary); opacity: 0.3; cursor: default; }
+  .avail-day.other { opacity: 0.25; }
+  .avail-legend { display: flex; gap: 16px; margin-top: 10px; }
+  .avail-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--color-text-secondary); }
+  .avail-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .avail-dot.green { background: var(--color-green-vivid); }
+  .avail-dot.gray  { background: var(--color-border); border: 1px solid var(--color-text-secondary); opacity: 0.4; }
+
+  /* Pricing */
+  .price-table { display: flex; flex-direction: column; gap: 8px; }
+  .price-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 12px; border-radius: 8px;
+    background: var(--color-bg-elevated);
+    font-size: 14px;
+  }
+  .price-row-label { color: var(--color-text-secondary); }
+  .price-row-value { font-weight: 600; color: var(--color-text-primary); }
+  .price-row.highlight {
+    background: rgba(27,104,68,0.06);
+    border: 1px solid rgba(27,104,68,0.15);
+  }
+  .price-row.highlight .price-row-value { color: var(--color-green-light); }
+
+  /* Drawer CTA */
+  .drawer-cta-wrap { padding: 0 32px 32px; flex-shrink: 0; }
+  .drawer-cta {
+    display: block; width: 100%;
+    background: var(--color-gold); color: #FAF8F4;
+    font-family: var(--font-body); font-size: 15px; font-weight: 700;
+    padding: 16px; border-radius: 10px; border: none;
+    text-align: center; cursor: pointer; transition: background 0.2s;
+    text-decoration: none; margin-bottom: 10px;
+  }
+  .drawer-cta:hover { background: var(--color-gold-light); }
+  .drawer-cta.secondary {
+    background: transparent; color: var(--color-text-secondary);
+    border: 1px solid var(--color-border); font-weight: 500;
+  }
+  .drawer-trust {
+    display: flex; justify-content: center; gap: 16px; margin-top: 12px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em;
+    color: var(--color-text-secondary); text-transform: uppercase;
+  }
+  .trust-sep { opacity: 0.3; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    nav { padding: 0 32px; }
+    .page-header { padding: 32px 32px 28px; }
+    .content-area { grid-template-columns: 1fr; }
+    .detail-drawer { display: none; }
+    .grid-panel { padding: 32px 32px 48px; border-right: none; }
+    .page-title { font-size: 36px; }
+    .page-wrap { padding-bottom: 80px; }
+  }
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    .page-header { padding: 24px 20px 20px; }
+    .page-title { font-size: 28px; }
+    .filter-bar { flex-wrap: wrap; gap: 12px; }
+    /* 2×2 grid — no horizontal scroll */
+    .filter-group { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; }
+    .filter-field { min-width: 0; border-right: none; border-bottom: 1px solid var(--color-border); }
+    .filter-field:nth-child(odd) { border-right: 1px solid var(--color-border); }
+    .filter-field:nth-child(3),
+    .filter-field:nth-child(4) { border-bottom: none; }
+    .filter-search-btn { grid-column: 1 / -1; border-radius: 0 0 10px 10px; min-height: 48px; width: 100%; }
+    .filter-sep { display: none; }
+    /* Chips wrap naturally — no horizontal scroll */
+    .chip-bar { flex-wrap: wrap; width: auto; padding-bottom: 0; }
+    .bays-grid, .grid-panel .bays-grid { grid-template-columns: 1fr; }
+    .grid-panel { padding: 24px 20px 40px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+
+  /* ─── STICKY BOTTOM SELECTION BAR (mobile/tablet only) ─── */
+  .bottom-selection-bar {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    align-items: center; gap: 12px;
+    padding: 14px 20px;
+    background: var(--color-bg-surface);
+    border-top: 1px solid var(--color-border);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.1);
+    z-index: 90;
+    transform: translateY(100%);
+    transition: transform 250ms ease;
+  }
+  .bottom-selection-bar.visible {
+    display: flex;
+    transform: translateY(0);
+  }
+  @media (min-width: 1025px) {
+    .bottom-selection-bar { display: none !important; }
+  }
+  .bottom-bar-bay-accent {
+    width: 4px; height: 40px; border-radius: 2px;
+    background: var(--color-green-primary); flex-shrink: 0;
+  }
+  .bottom-bar-info { flex: 1; min-width: 0; }
+  .bottom-bar-name {
+    font-family: var(--font-display); font-size: 16px; font-weight: 500;
+    color: var(--color-text-primary); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .bottom-bar-sub {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--color-text-secondary); margin-top: 2px;
+  }
+  .bottom-bar-price {
+    font-family: var(--font-display); font-size: 20px; font-weight: 500;
+    color: var(--color-text-primary); flex-shrink: 0;
+  }
+  .bottom-bar-unit { font-size: 13px; color: var(--color-text-secondary); margin-left: 2px; }
+  .bottom-bar-cta {
+    background: var(--color-gold); color: var(--color-text-inverse);
+    font-family: var(--font-body); font-size: 14px; font-weight: 600;
+    padding: 10px 20px; border-radius: var(--radius-md);
+    text-decoration: none; white-space: nowrap; flex-shrink: 0;
+    cursor: pointer;
+    transition: background 200ms ease, box-shadow 200ms ease;
+  }
+  .bottom-bar-cta:hover {
+    background: var(--color-gold-light);
+    box-shadow: var(--shadow-glow-gold);
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- NAV -->
+<nav aria-label="Main navigation">
+  <div class="nav-logo">
+    <img class="logo-full logo-light" src="../assets/logos/the-golf-room-logo-light.svg" alt="The Golf Room" />
+    <img class="logo-full logo-dark"  src="../assets/logos/the-golf-room-logo-dark.svg"  alt="The Golf Room" />
+    <img class="logo-badge logo-light" src="../assets/logos/badge-logo-light.svg" alt="The Golf Room" />
+    <img class="logo-badge logo-dark"  src="../assets/logos/badge-logo-dark.svg"  alt="The Golf Room" />
+  </div>
+  <div class="nav-actions">
+    <a class="btn btn-ghost" href="#">Sign In</a>
+    <a class="btn btn-primary" href="#">Book Now</a>
+  </div>
+</nav>
+
+<main id="main-content">
+<div class="page-wrap">
+
+  <!-- PAGE HEADER + FILTERS -->
+  <div class="page-header">
+    <div class="page-header-top">
+      <div>
+        <div class="page-eyebrow"><span class="eyebrow-line"></span>The Golf Room</div>
+        <h1 class="page-title">Choose your <em>bay.</em></h1>
+      </div>
+      <div class="page-meta">8 simulators &nbsp;&middot;&nbsp; All available today</div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-group">
+        <div class="filter-field">
+          <span class="filter-field-label">Date</span>
+          <span class="filter-field-value">Sat, Mar 7</span>
+        </div>
+        <div class="filter-field">
+          <span class="filter-field-label">Time</span>
+          <span class="filter-field-value">11:30 AM</span>
+        </div>
+        <div class="filter-field">
+          <span class="filter-field-label">Players</span>
+          <span class="filter-field-value">4 players</span>
+        </div>
+        <div class="filter-field">
+          <span class="filter-field-label">Duration</span>
+          <span class="filter-field-value">2 hours</span>
+        </div>
+        <button class="filter-search-btn">Update Search</button>
+      </div>
+
+      <div class="filter-sep"></div>
+
+      <div class="chip-bar">
+        <div class="filter-chip active">All</div>
+        <div class="filter-chip">Standard</div>
+        <div class="filter-chip">Premium</div>
+        <div class="filter-chip">Up to 4</div>
+        <div class="filter-chip">Up to 8</div>
+        <div class="filter-chip">Full Swing</div>
+        <div class="filter-chip">TrackMan</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT: GRID + DRAWER -->
+  <div class="content-area">
+
+    <!-- BAY GRID -->
+    <div class="grid-panel">
+      <div class="grid-meta">
+        <span class="grid-count">6 bays available</span>
+        <div class="grid-sort">Sort: Price &darr;</div>
+      </div>
+
+      <div class="bays-grid">
+
+        <!-- Bay 1 — The Highlands -->
+        <div class="bay-card">
+          <div class="bay-card-img highlands">
+            <span class="bay-card-img-placeholder">Bay Image</span>
+            <span class="bay-num">01</span>
+            <div class="bay-card-img-footer">
+              <div>
+                <div class="bay-name-over">The Highlands Bay<small>Standard · Bay 01</small></div>
+              </div>
+              <span class="badge badge-available"><span class="badge-dot"></span>Available</span>
+            </div>
+          </div>
+          <div class="bay-card-body">
+            <div class="bay-card-specs">
+              <div class="bay-spec"><span class="bay-spec-label">Tech</span><span class="bay-spec-value">Full Swing Kit</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Players</span><span class="bay-spec-value">Up to 6</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Display</span><span class="bay-spec-value">4K Ultra HD</span></div>
+            </div>
+            <div class="bay-tags">
+              <span class="bay-tag">4K Display</span>
+              <span class="bay-tag">Lounge seating</span>
+              <span class="bay-tag">Climate control</span>
+            </div>
+            <div class="bay-card-footer-bar">
+              <div class="bay-price">$60 <span class="bay-price-unit">/ hr</span></div>
+              <a class="btn btn-ghost" href="#" style="padding:8px 16px; font-size:13px;">View Details</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bay 2 — The Masters (ACTIVE/SELECTED) -->
+        <div class="bay-card active">
+          <div class="bay-card-img masters">
+            <span class="bay-card-img-placeholder">Bay Image</span>
+            <span class="bay-num">02</span>
+            <div class="bay-card-img-footer">
+              <div>
+                <div class="bay-name-over">The Masters Suite<small>Premium · Bay 02</small></div>
+              </div>
+              <span class="badge badge-premium">Premium</span>
+            </div>
+          </div>
+          <div class="bay-card-body">
+            <div class="bay-card-specs">
+              <div class="bay-spec"><span class="bay-spec-label">Tech</span><span class="bay-spec-value">TrackMan Pro</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Players</span><span class="bay-spec-value">Up to 8</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Display</span><span class="bay-spec-value">8K Ultra HD</span></div>
+            </div>
+            <div class="bay-tags">
+              <span class="bay-tag">8K Display</span>
+              <span class="bay-tag">Private bar</span>
+              <span class="bay-tag">Concierge</span>
+              <span class="bay-tag">Sound system</span>
+            </div>
+            <div class="bay-card-footer-bar">
+              <div class="bay-price">$120 <span class="bay-price-unit">/ hr</span></div>
+              <a class="btn btn-primary" href="#" style="padding:8px 16px; font-size:13px;">Selected</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bay 3 — The Links -->
+        <div class="bay-card">
+          <div class="bay-card-img links">
+            <span class="bay-card-img-placeholder">Bay Image</span>
+            <span class="bay-num">03</span>
+            <div class="bay-card-img-footer">
+              <div>
+                <div class="bay-name-over">The Links Bay<small>Standard · Bay 03</small></div>
+              </div>
+              <span class="badge badge-available"><span class="badge-dot"></span>Available</span>
+            </div>
+          </div>
+          <div class="bay-card-body">
+            <div class="bay-card-specs">
+              <div class="bay-spec"><span class="bay-spec-label">Tech</span><span class="bay-spec-value">Full Swing</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Players</span><span class="bay-spec-value">Up to 4</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Display</span><span class="bay-spec-value">4K Ultra HD</span></div>
+            </div>
+            <div class="bay-tags">
+              <span class="bay-tag">4K Display</span>
+              <span class="bay-tag">Compact layout</span>
+            </div>
+            <div class="bay-card-footer-bar">
+              <div class="bay-price">$50 <span class="bay-price-unit">/ hr</span></div>
+              <a class="btn btn-ghost" href="#" style="padding:8px 16px; font-size:13px;">View Details</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bay 4 — Augusta -->
+        <div class="bay-card">
+          <div class="bay-card-img augusta">
+            <span class="bay-card-img-placeholder">Bay Image</span>
+            <span class="bay-num">04</span>
+            <div class="bay-card-img-footer">
+              <div>
+                <div class="bay-name-over">The Augusta Bay<small>Standard · Bay 04</small></div>
+              </div>
+              <span class="badge badge-available"><span class="badge-dot"></span>Available</span>
+            </div>
+          </div>
+          <div class="bay-card-body">
+            <div class="bay-card-specs">
+              <div class="bay-spec"><span class="bay-spec-label">Tech</span><span class="bay-spec-value">Full Swing</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Players</span><span class="bay-spec-value">Up to 6</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Display</span><span class="bay-spec-value">4K Ultra HD</span></div>
+            </div>
+            <div class="bay-tags">
+              <span class="bay-tag">4K Display</span>
+              <span class="bay-tag">Mini bar</span>
+              <span class="bay-tag">Lounge seating</span>
+            </div>
+            <div class="bay-card-footer-bar">
+              <div class="bay-price">$75 <span class="bay-price-unit">/ hr</span></div>
+              <a class="btn btn-ghost" href="#" style="padding:8px 16px; font-size:13px;">View Details</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bay 5 — Pebble -->
+        <div class="bay-card">
+          <div class="bay-card-img pebble">
+            <span class="bay-card-img-placeholder">Bay Image</span>
+            <span class="bay-num">05</span>
+            <div class="bay-card-img-footer">
+              <div>
+                <div class="bay-name-over">The Pebble Bay<small>Premium · Bay 05</small></div>
+              </div>
+              <span class="badge badge-premium">Premium</span>
+            </div>
+          </div>
+          <div class="bay-card-body">
+            <div class="bay-card-specs">
+              <div class="bay-spec"><span class="bay-spec-label">Tech</span><span class="bay-spec-value">TrackMan Pro</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Players</span><span class="bay-spec-value">Up to 8</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Display</span><span class="bay-spec-value">8K Ultra HD</span></div>
+            </div>
+            <div class="bay-tags">
+              <span class="bay-tag">8K Display</span>
+              <span class="bay-tag">Private bar</span>
+              <span class="bay-tag">Dining service</span>
+            </div>
+            <div class="bay-card-footer-bar">
+              <div class="bay-price">$110 <span class="bay-price-unit">/ hr</span></div>
+              <a class="btn btn-ghost" href="#" style="padding:8px 16px; font-size:13px;">View Details</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bay 6 — St Andrews (BUSY) -->
+        <div class="bay-card unavailable">
+          <div class="bay-card-img st-andrews">
+            <span class="bay-card-img-placeholder">Bay Image</span>
+            <span class="bay-num">06</span>
+            <div class="bay-card-img-footer">
+              <div>
+                <div class="bay-name-over">The St Andrews Bay<small>Standard · Bay 06</small></div>
+              </div>
+              <span class="badge badge-busy">Booked</span>
+            </div>
+          </div>
+          <div class="bay-card-body">
+            <div class="bay-card-specs">
+              <div class="bay-spec"><span class="bay-spec-label">Tech</span><span class="bay-spec-value">Full Swing</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Players</span><span class="bay-spec-value">Up to 6</span></div>
+              <div class="bay-spec"><span class="bay-spec-label">Display</span><span class="bay-spec-value">4K Ultra HD</span></div>
+            </div>
+            <div class="bay-tags">
+              <span class="bay-tag">4K Display</span>
+              <span class="bay-tag">Lounge seating</span>
+            </div>
+            <div class="bay-card-footer-bar">
+              <div class="bay-price">$65 <span class="bay-price-unit">/ hr</span></div>
+              <a class="btn btn-ghost" href="#" style="padding:8px 16px; font-size:13px; opacity:0.5;">Unavailable</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DETAIL DRAWER — The Masters Suite -->
+    <div class="detail-drawer">
+      <div class="drawer-hero">
+        <span class="drawer-hero-placeholder">Bay Image</span>
+        <span class="drawer-hero-num">02</span>
+        <div class="drawer-hero-content">
+          <div class="drawer-hero-badge"><span class="badge badge-premium">Premium</span></div>
+          <div class="drawer-hero-name">The Masters Suite</div>
+          <div class="drawer-hero-sub">Bay 02 &nbsp;&middot;&nbsp; Up to 8 players</div>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+
+        <!-- Specs -->
+        <div class="drawer-section">
+          <div class="drawer-section-title">Bay Specifications</div>
+          <div class="spec-grid">
+            <div class="spec-item">
+              <span class="spec-item-label">Simulator</span>
+              <span class="spec-item-value">TrackMan Pro</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-item-label">Display</span>
+              <span class="spec-item-value">8K Ultra HD</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-item-label">Max Players</span>
+              <span class="spec-item-value">8 players</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-item-label">Size</span>
+              <span class="spec-item-value">240 sq ft</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-item-label">Courses</span>
+              <span class="spec-item-value">100+ available</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-item-label">Launch Monitor</span>
+              <span class="spec-item-value">Ball speed, spin, path</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="drawer-section">
+          <div class="drawer-section-title">Included Features</div>
+          <div class="features-list">
+            <div class="feature-item">TrackMan Pro launch monitor & full ball data</div>
+            <div class="feature-item">8K projector display with surround sound</div>
+            <div class="feature-item">Private bar & dedicated F&B service</div>
+            <div class="feature-item">Lounge seating for up to 10 guests</div>
+            <div class="feature-item">Personal concierge throughout session</div>
+            <div class="feature-item">Climate control & premium lighting</div>
+            <div class="feature-item">USB charging & wireless connectivity</div>
+          </div>
+        </div>
+
+        <!-- Availability this week -->
+        <div class="drawer-section">
+          <div class="drawer-section-title">Availability — March 2026</div>
+          <div class="avail-row">
+            <div class="avail-day-label">S</div>
+            <div class="avail-day-label">M</div>
+            <div class="avail-day-label">T</div>
+            <div class="avail-day-label">W</div>
+            <div class="avail-day-label">T</div>
+            <div class="avail-day-label">F</div>
+            <div class="avail-day-label">S</div>
+          </div>
+          <div class="avail-row">
+            <div class="avail-day other">2</div>
+            <div class="avail-day">3</div>
+            <div class="avail-day">4</div>
+            <div class="avail-day">5</div>
+            <div class="avail-day">6</div>
+            <div class="avail-day selected">7</div>
+            <div class="avail-day">8</div>
+          </div>
+          <div class="avail-row">
+            <div class="avail-day">9</div>
+            <div class="avail-day busy">10</div>
+            <div class="avail-day">11</div>
+            <div class="avail-day">12</div>
+            <div class="avail-day busy">13</div>
+            <div class="avail-day busy">14</div>
+            <div class="avail-day">15</div>
+          </div>
+          <div class="avail-legend">
+            <div class="avail-legend-item"><span class="avail-dot green"></span>Available</div>
+            <div class="avail-legend-item"><span class="avail-dot gray"></span>Booked</div>
+          </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="drawer-section">
+          <div class="drawer-section-title">Pricing</div>
+          <div class="price-table">
+            <div class="price-row"><span class="price-row-label">1 hour</span><span class="price-row-value">$120</span></div>
+            <div class="price-row highlight"><span class="price-row-label">2 hours <span style="font-size:11px; opacity:0.6;">(selected)</span></span><span class="price-row-value">$240</span></div>
+            <div class="price-row"><span class="price-row-label">3 hours</span><span class="price-row-value">$345</span></div>
+            <div class="price-row"><span class="price-row-label">Half day (4 hrs)</span><span class="price-row-value">$440</span></div>
+            <div class="price-row"><span class="price-row-label">Member rate (Eagle+)</span><span class="price-row-value" style="color: var(--color-green-light);">-15%</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="drawer-cta-wrap">
+        <a class="drawer-cta" href="#">Book The Masters Suite</a>
+        <a class="drawer-cta secondary" href="#">Share Bay Details</a>
+        <div class="drawer-trust">
+          <span>Free cancellation</span>
+          <span class="trust-sep">&middot;</span>
+          <span>Instant confirmation</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</main>
+
+<!-- STICKY BOTTOM SELECTION BAR — visible on mobile/tablet when a bay is selected -->
+<div class="bottom-selection-bar" role="status" aria-live="polite">
+  <div class="bottom-bar-bay-accent"></div>
+  <div class="bottom-bar-info">
+    <div class="bottom-bar-name"></div>
+    <div class="bottom-bar-sub"></div>
+  </div>
+  <div class="bottom-bar-price">&#8203;<span class="bottom-bar-unit">/hr</span></div>
+  <a class="bottom-bar-cta" href="#">Book Now</a>
+</div>
+
+<div role="alert" aria-live="polite" aria-atomic="true" id="live-region" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"></div>
+
+<script>
+  const MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  const SUN_SVG  = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+
+  const root = document.documentElement;
+  if (localStorage.getItem('golf-room-theme') === 'dark') root.setAttribute('data-theme', 'dark');
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('theme-toggle');
+    if (localStorage.getItem('golf-room-theme') === 'dark') toggle.innerHTML = SUN_SVG;
+    toggle.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        toggle.innerHTML = MOON_SVG;
+        localStorage.setItem('golf-room-theme', 'light');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        toggle.innerHTML = SUN_SVG;
+        localStorage.setItem('golf-room-theme', 'dark');
+      }
+    });
+  });
+
+  // ─── Bay selection → sticky bottom bar ───
+  (function () {
+    const bar      = document.querySelector('.bottom-selection-bar');
+    const barName  = bar.querySelector('.bottom-bar-name');
+    const barSub   = bar.querySelector('.bottom-bar-sub');
+    const barPrice = bar.querySelector('.bottom-bar-price');
+    const barUnit  = bar.querySelector('.bottom-bar-unit');
+    const barAccent = bar.querySelector('.bottom-bar-bay-accent');
+
+    document.querySelectorAll('.bay-card:not(.unavailable)').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.bay-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+
+        // Pull data from card DOM
+        const nameEl  = card.querySelector('.bay-name-over');
+        const name    = nameEl ? nameEl.firstChild.textContent.trim() : '';
+        const sub     = nameEl ? (nameEl.querySelector('small') || {}).textContent || '' : '';
+        const priceEl = card.querySelector('.bay-price');
+        const price   = priceEl ? priceEl.firstChild.textContent.trim() : '';
+
+        barName.textContent = name;
+        barSub.textContent  = sub.trim();
+        // Set price text, keeping the unit span
+        barPrice.firstChild.textContent = price + '\u00A0';
+
+        // Accent color: gold for premium bays, green for standard
+        const isPremium = !!card.querySelector('.badge-premium');
+        barAccent.style.background = isPremium
+          ? 'var(--color-gold)'
+          : 'var(--color-green-primary)';
+
+        bar.classList.add('visible');
+      });
+    });
+  })();
+</script>
+
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+
+</body>
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Golf Room — Dev Handoff</title>
+<link rel="icon" href="assets/logos/mogogram-logo-dark.svg"  type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/logos/mogogram-logo-light.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="globals.css">
+<style>
+/* ── Index-specific layout ─────────────────────────────── */
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--space-20) var(--space-8);
+}
+
+.header {
+  margin-bottom: var(--space-20);
+}
+
+.header__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-green-primary);
+  margin-bottom: var(--space-4);
+}
+
+.header__title {
+  font-family: var(--font-display);
+  font-size: var(--text-display-lg);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  line-height: 1.05;
+  margin-bottom: var(--space-5);
+}
+
+.header__desc {
+  font-size: var(--text-body-lg);
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  line-height: 1.7;
+}
+
+.header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.header__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.header__meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.header__meta-value {
+  font-size: var(--text-body-md);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Section heading */
+.section-heading {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Card grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-16);
+}
+
+/* Link card */
+.link-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  text-decoration: none;
+  display: block;
+  transition: box-shadow 200ms ease, border-color 200ms ease, transform 150ms ease;
+  cursor: pointer;
+}
+
+.link-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-border-strong);
+  transform: translateY(-2px);
+}
+
+.link-card__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+  flex-shrink: 0;
+}
+
+.link-card__icon--green {
+  background: var(--color-green-subtle);
+  color: var(--color-green-primary);
+}
+
+.link-card__icon--gold {
+  background: rgba(166, 124, 36, 0.1);
+  color: var(--color-gold);
+}
+[data-theme="dark"] .link-card__icon--gold {
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--color-gold-light);
+}
+
+.link-card__icon--gray {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+}
+
+.link-card__title {
+  font-size: var(--text-body-md);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.link-card__desc {
+  font-size: var(--text-body-md);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.link-card__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+/* Page card — wider */
+.page-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  text-decoration: none;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+  cursor: pointer;
+}
+
+.page-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-strong);
+}
+
+.page-card__num {
+  font-family: var(--font-display);
+  font-size: var(--text-heading-md);
+  font-weight: 300;
+  color: var(--color-border-strong);
+  flex-shrink: 0;
+  width: 32px;
+  line-height: 1.2;
+}
+
+.page-card__body {
+  flex: 1;
+}
+
+.page-card__title {
+  font-size: var(--text-body-md);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.page-card__file {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-elevated);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.page-card__desc {
+  font-size: var(--text-body-md);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-top: var(--space-1);
+}
+
+.page-card__features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.page-card__feature {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-elevated);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-12) 0;
+}
+
+/* Stack badge */
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-16);
+}
+
+.stack-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+}
+
+/* Logo */
+.logo { height: 26px; width: auto; margin-bottom: var(--space-8); }
+
+/* Footer */
+.footer {
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.06em;
+}
+
+/* Theme toggle (fixed) */
+.fixed-toggle {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition: color 200ms ease, background 200ms ease;
+  z-index: 50;
+}
+.fixed-toggle:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-elevated);
+}
+
+@media (max-width: 640px) {
+  .page { padding: var(--space-12) var(--space-5); }
+  .header__title { font-size: var(--text-display-md); }
+  .card-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<script>
+  (function() {
+    const stored = localStorage.getItem('golf-room-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (stored === 'dark' || (!stored && prefersDark)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+
+<div class="page">
+
+  <!-- Logo -->
+  <img src="assets/logos/the-golf-room-logo-dark.svg"  id="logo-light" class="logo" alt="The Golf Room">
+  <img src="assets/logos/the-golf-room-logo-light.svg" id="logo-dark"  class="logo" alt="The Golf Room" style="display:none">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header__eyebrow">Dev Handoff Package</div>
+    <h1 class="header__title">The Golf Room</h1>
+    <p class="header__desc">A premium golf simulation room booking platform. This package contains all design tokens, component classes, and HTML wireframes needed to begin development.</p>
+
+    <div class="header__meta">
+      <div class="header__meta-item">
+        <span class="header__meta-label">Status</span>
+        <span class="header__meta-value">Design Complete</span>
+      </div>
+      <div class="header__meta-item">
+        <span class="header__meta-label">Pages</span>
+        <span class="header__meta-value">8 wireframes</span>
+      </div>
+      <div class="header__meta-item">
+        <span class="header__meta-label">Components</span>
+        <span class="header__meta-value">16 classes</span>
+      </div>
+      <div class="header__meta-item">
+        <span class="header__meta-label">Last Updated</span>
+        <span class="header__meta-value">April 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stack -->
+  <h2 class="section-heading">Tech Stack</h2>
+  <div class="stack">
+    <div class="stack-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      HTML5
+    </div>
+    <div class="stack-item">CSS Custom Properties</div>
+    <div class="stack-item">No framework</div>
+    <div class="stack-item">Light &amp; dark mode</div>
+    <div class="stack-item">Cormorant Garamond</div>
+    <div class="stack-item">DM Sans</div>
+    <div class="stack-item">DM Mono</div>
+    <div class="stack-item">Responsive (640px / 768px)</div>
+  </div>
+
+  <!-- System Files -->
+  <h2 class="section-heading">Design System</h2>
+  <div class="card-grid">
+    <a href="design-system.html" class="link-card">
+      <div class="link-card__icon link-card__icon--green">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="link-card__title">Design System</div>
+      <div class="link-card__desc">Living style guide — all color tokens, typography scale, spacing, shadows, radii, and every component with all states.</div>
+      <div class="link-card__tag">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        design-system.html
+      </div>
+    </a>
+
+    <a href="globals.css" class="link-card">
+      <div class="link-card__icon link-card__icon--gold">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div class="link-card__title">globals.css</div>
+      <div class="link-card__desc">Source of truth for all CSS custom properties — colors, spacing, typography, shadows, radii, layout tokens. Import first.</div>
+      <div class="link-card__tag">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        globals.css
+      </div>
+    </a>
+
+    <a href="components.css" class="link-card">
+      <div class="link-card__icon link-card__icon--gray">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="link-card__title">components.css</div>
+      <div class="link-card__desc">All component classes — buttons, badges, cards, inputs, nav, bay cards, calendar, modal, and more. No hardcoded values.</div>
+      <div class="link-card__tag">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        components.css
+      </div>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Pages -->
+  <h2 class="section-heading">Page Wireframes</h2>
+  <div style="display:flex;flex-direction:column;gap:var(--space-3);margin-bottom:var(--space-16);">
+
+    <a href="pages/landing.html" class="page-card">
+      <div class="page-card__num">01</div>
+      <div class="page-card__body">
+        <div class="page-card__title">
+          Landing
+          <span class="page-card__file">landing.html</span>
+        </div>
+        <div class="page-card__desc">Marketing homepage — hero, features, how it works, bay showcase, membership tiers, testimonials, and footer. Sign-in/register is a modal (no separate auth page).</div>
+        <div class="page-card__features">
+          <span class="page-card__feature">Hero split-layout</span>
+          <span class="page-card__feature">Auth modal (tabbed)</span>
+          <span class="page-card__feature">Membership tiers</span>
+          <span class="page-card__feature">Testimonials</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="pages/bays.html" class="page-card">
+      <div class="page-card__num">02</div>
+      <div class="page-card__body">
+        <div class="page-card__title">
+          Bay Browser
+          <span class="page-card__file">bays.html</span>
+        </div>
+        <div class="page-card__desc">Immersive bay selection grid with multi-field filter bar (date, time, players, type), active filter chips, and a 440px detail sidebar.</div>
+        <div class="page-card__features">
+          <span class="page-card__feature">Filter bar + chips</span>
+          <span class="page-card__feature">2-col bay grid</span>
+          <span class="page-card__feature">Detail sidebar</span>
+          <span class="page-card__feature">6 named palettes</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="pages/booking.html" class="page-card">
+      <div class="page-card__num">03</div>
+      <div class="page-card__body">
+        <div class="page-card__title">
+          Booking Flow
+          <span class="page-card__file">booking.html</span>
+        </div>
+        <div class="page-card__desc">Full 3-step booking wizard in a single page (step divs toggled). Step 1 = calendar grid with color-coded bay chips; Step 2 = bay selection; Step 3 = review. Sticky bottom bar shows live selection summary.</div>
+        <div class="page-card__features">
+          <span class="page-card__feature">3-step wizard</span>
+          <span class="page-card__feature">Calendar grid</span>
+          <span class="page-card__feature">Bay filter chips</span>
+          <span class="page-card__feature">Sticky selection bar</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="pages/booking-datetime.html" class="page-card">
+      <div class="page-card__num">03a</div>
+      <div class="page-card__body">
+        <div class="page-card__title">
+          Date &amp; Time Picker
+          <span class="page-card__file">booking-datetime.html</span>
+        </div>
+        <div class="page-card__desc">Standalone Step 1 detail view — calendar panel with selected slot callout sidebar, price preview, and free cancellation note.</div>
+        <div class="page-card__features">
+          <span class="page-card__feature">Standalone Step 1</span>
+          <span class="page-card__feature">Slot callout</span>
+          <span class="page-card__feature">Price preview</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="pages/booking-confirm.html" class="page-card">
+      <div class="page-card__num">03b</div>
+      <div class="page-card__body">
+        <div class="page-card__title">
+          Confirm &amp; Pay
+          <span class="page-card__file">booking-confirm.html</span>
+        </div>
+        <div class="page-card__desc">Session details grid, bay info, price breakdown, and an integrated payment form (card number, expiry/CVC). Trust badges and sidebar summary. No separate payment page.</div>
+        <div class="page-card__features">
+          <span class="page-card__feature">Payment form</span>
+          <span class="page-card__feature">Price breakdown</span>
+          <span class="page-card__feature">Trust badges</span>
+          <span class="page-card__feature">Sidebar summary</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="pages/dashboard.html" class="page-card">
+      <div class="page-card__num">04</div>
+      <div class="page-card__body">
+        <div class="page-card__title">
+          Dashboard
+          <span class="page-card__file">dashboard.html</span>
+        </div>
+        <div class="page-card__desc">Authenticated user hub — greeting, 4-col stats grid, "Next Session" card with live indicator and countdown timer, upcoming sessions list, and session history table. Profile dropdown in topbar.</div>
+        <div class="page-card__features">
+          <span class="page-card__feature">Stats grid</span>
+          <span class="page-card__feature">Live indicator</span>
+          <span class="page-card__feature">Countdown timer</span>
+          <span class="page-card__feature">Session history</span>
+          <span class="page-card__feature">Profile dropdown</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="pages/confirmation.html" class="page-card">
+      <div class="page-card__num">05</div>
+      <div class="page-card__body">
+        <div class="page-card__title">
+          Booking Confirmed
+          <span class="page-card__file">confirmation.html</span>
+        </div>
+        <div class="page-card__desc">Post-booking celebration page — dark-green hero with checkmark and reference code, booking detail card with QR placeholder, "What's Next" guidance, and calendar/app download CTAs.</div>
+        <div class="page-card__features">
+          <span class="page-card__feature">Dark hero banner</span>
+          <span class="page-card__feature">Reference code</span>
+          <span class="page-card__feature">QR placeholder</span>
+          <span class="page-card__feature">What's Next card</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="pages/profile.html" class="page-card">
+      <div class="page-card__num">06</div>
+      <div class="page-card__body">
+        <div class="page-card__title">
+          Edit Profile
+          <span class="page-card__file">profile.html</span>
+        </div>
+        <div class="page-card__desc">Minimal centered form card — avatar with membership tier badge, pre-filled name/email/phone fields, cancel and save actions.</div>
+        <div class="page-card__features">
+          <span class="page-card__feature">Avatar + tier badge</span>
+          <span class="page-card__feature">Profile form</span>
+          <span class="page-card__feature">Centered card layout</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Assets -->
+  <h2 class="section-heading">Logo Assets</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-4);margin-bottom:var(--space-16);">
+
+    <div style="background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
+      <div style="height:80px;display:flex;align-items:center;justify-content:center;padding:var(--space-5);background:var(--color-bg-base);">
+        <img src="assets/logos/the-golf-room-logo-dark.svg" style="height:24px;width:auto;" alt="Primary logo (dark)">
+      </div>
+      <div style="padding:var(--space-4);border-top:1px solid var(--color-border);">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);font-weight:500;">the-golf-room-logo-dark.svg</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Primary wordmark · on light backgrounds</div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
+      <div style="height:80px;display:flex;align-items:center;justify-content:center;padding:var(--space-5);background:var(--color-bg-base);" data-invert>
+        <img src="assets/logos/the-golf-room-logo-light.svg" style="height:24px;width:auto;" alt="Primary logo (light)">
+      </div>
+      <div style="padding:var(--space-4);border-top:1px solid var(--color-border);">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);font-weight:500;">the-golf-room-logo-light.svg</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Primary wordmark · on dark backgrounds</div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
+      <div style="height:80px;display:flex;align-items:center;justify-content:center;padding:var(--space-5);background:var(--color-bg-base);">
+        <img src="assets/logos/mogogram-logo-dark.svg" style="height:40px;width:auto;" alt="Monogram (dark)">
+      </div>
+      <div style="padding:var(--space-4);border-top:1px solid var(--color-border);">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);font-weight:500;">mogogram-logo-dark.svg</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Monogram / favicon · on light backgrounds</div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
+      <div style="height:80px;display:flex;align-items:center;justify-content:center;padding:var(--space-5);background:var(--color-bg-base);">
+        <img src="assets/logos/mogogram-logo-light.svg" style="height:40px;width:auto;" alt="Monogram (light)">
+      </div>
+      <div style="padding:var(--space-4);border-top:1px solid var(--color-border);">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);font-weight:500;">mogogram-logo-light.svg</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Monogram / favicon · on dark backgrounds</div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
+      <div style="height:80px;display:flex;align-items:center;justify-content:center;padding:var(--space-5);background:var(--color-bg-base);">
+        <img src="assets/logos/badge-logo-dark.svg" style="height:52px;width:auto;" alt="Badge logo (dark)">
+      </div>
+      <div style="padding:var(--space-4);border-top:1px solid var(--color-border);">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);font-weight:500;">badge-logo-dark.svg</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Badge lockup · avatars, membership cards</div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
+      <div style="height:80px;display:flex;align-items:center;justify-content:center;padding:var(--space-5);background:var(--color-bg-base);">
+        <img src="assets/logos/badge-logo-light.svg" style="height:52px;width:auto;" alt="Badge logo (light)">
+      </div>
+      <div style="padding:var(--space-4);border-top:1px solid var(--color-border);">
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);font-weight:500;">badge-logo-light.svg</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Badge lockup · on dark backgrounds</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>The Golf Room · Dev Handoff · April 2026</span>
+    <a href="design-system.html" style="color:var(--color-green-primary);text-decoration:none;">Design System →</a>
+  </div>
+
+</div>
+
+<!-- Fixed theme toggle -->
+<button class="fixed-toggle" id="theme-toggle" aria-label="Toggle theme">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+</button>
+
+<script>
+  const html = document.documentElement;
+
+  function syncLogos() {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    document.getElementById('logo-light').style.display = isDark ? 'none' : 'block';
+    document.getElementById('logo-dark').style.display  = isDark ? 'block' : 'none';
+    // Invert preview backgrounds for light logos
+    document.querySelectorAll('[data-invert]').forEach(function(el) {
+      el.style.background = isDark ? 'var(--color-bg-elevated)' : 'var(--color-green-primary)';
+    });
+  }
+
+  document.getElementById('theme-toggle').addEventListener('click', function() {
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('golf-room-theme', isDark ? 'light' : 'dark');
+    syncLogos();
+  });
+
+  syncLogos();
+</script>
+</body>
+</html>

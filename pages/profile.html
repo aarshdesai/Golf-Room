@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Golf Room — Edit Profile</title>
+<link rel="icon" href="../assets/logos/mogogram-logo-light.svg" type="image/svg+xml" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../assets/logos/mogogram-logo-dark.svg"  type="image/svg+xml" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-bg-base:        #F4F1EC;
+  --color-bg-surface:     #FFFFFF;
+  --color-bg-elevated:    #EBE7E0;
+  --color-green-primary:  #1B6844;
+  --color-green-light:    #2F8A5A;
+  --color-green-vivid:    #3DA96C;
+  --color-gold:           #A67C24;
+  --color-gold-light:     #C4982E;
+  --color-text-primary:   #141A16;
+  --color-text-secondary: #596760;
+  --color-text-inverse:   #F4F1EC;
+  --color-border:         rgba(27,104,68,0.13);
+  --color-shadow:         0 2px 12px rgba(0,0,0,0.07);
+  --color-error:          #C0443A;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'DM Mono', monospace;
+}
+
+[data-theme="dark"] {
+  --color-bg-base:        #0A0E0B;
+  --color-bg-surface:     #111714;
+  --color-bg-elevated:    #1A211E;
+  --color-green-light:    #3DA96C;
+  --color-gold:           #C9A84C;
+  --color-gold-light:     #E2C17A;
+  --color-text-primary:   #F0EDE6;
+  --color-text-secondary: #9DA89E;
+  --color-border:         rgba(47,138,90,0.80);
+  --color-shadow:         0 2px 12px rgba(0,0,0,0.35);
+  --color-error:          #E07070;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ─── TOPBAR ─────────────────────────────────────── */
+.topbar {
+  padding: 0 48px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-surface);
+  position: sticky; top: 0; z-index: 10;
+}
+.topbar-logo { display: flex; align-items: center; }
+.topbar-logo img { height: 24px; width: auto; display: block; }
+.logo-light { display: block; }
+.logo-dark  { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark  { display: block; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; color: var(--color-text-secondary);
+  text-decoration: none; transition: color 0.2s;
+}
+.back-link:hover { color: var(--color-text-primary); }
+
+.theme-toggle {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 44px; height: 44px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--color-text-secondary);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transition: all 0.2s; z-index: 50;
+}
+.theme-toggle:hover { border-color: var(--color-green-light); color: var(--color-green-light); box-shadow: 0 4px 24px rgba(0,0,0,0.18); }
+
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+
+/* ─── PAGE ───────────────────────────────────────── */
+.page {
+  display: flex; justify-content: center;
+  padding: 48px 24px 80px;
+}
+
+.card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%; max-width: 480px;
+  box-shadow: var(--color-shadow);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 300; letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+.card-sub {
+  font-size: 14px; color: var(--color-text-secondary);
+  margin-bottom: 32px;
+}
+
+/* Avatar */
+.avatar-row {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 32px; padding-bottom: 32px;
+  border-bottom: 1px solid var(--color-border);
+}
+.profile-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, #1B6844, #3DA96C);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-body); font-size: 18px; font-weight: 600;
+  color: #fff; flex-shrink: 0;
+}
+.avatar-label { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+
+/* Form */
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.form-label {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--color-text-secondary);
+}
+.form-input {
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: var(--font-body); font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-green-light);
+  box-shadow: 0 0 0 3px rgba(27,104,68,0.08);
+}
+.form-input::placeholder { color: var(--color-text-secondary); opacity: 0.5; }
+
+.form-actions {
+  display: flex; gap: 12px; margin-top: 32px;
+  padding-top: 32px; border-top: 1px solid var(--color-border);
+}
+.btn-primary {
+  flex: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--color-gold); color: #141A16;
+  font-family: var(--font-body); font-weight: 600;
+  padding: 13px 24px; border-radius: 8px; font-size: 14px;
+  border: none; cursor: pointer; text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-primary:hover { background: var(--color-gold-light); }
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--color-text-secondary);
+  font-family: var(--font-body); font-weight: 500;
+  padding: 13px 20px; border-radius: 8px; font-size: 14px;
+  border: 1px solid var(--color-border); cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { border-color: var(--color-green-light); color: var(--color-green-light); }
+
+/* ─── RESPONSIVE ─────────────────────────────────── */
+@media (max-width: 640px) {
+  .topbar { padding: 0 16px; }
+  .card { padding: 28px 20px; }
+}
+
+*:focus-visible { outline: 2px solid var(--color-green-vivid); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="topbar-logo">
+      <img class="logo-light" src="../assets/logos/the-golf-room-logo-light.svg" alt="The Golf Room" />
+      <img class="logo-dark"  src="../assets/logos/the-golf-room-logo-dark.svg"  alt="The Golf Room" />
+    </div>
+    <div class="topbar-right">
+      <a class="back-link" href="dashboard.html">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Dashboard
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+  <div class="card">
+    <h1 class="card-title">Edit Profile</h1>
+    <p class="card-sub">Update your personal information.</p>
+
+    <div class="avatar-row">
+      <div class="profile-avatar">JM</div>
+      <div>
+        <div style="font-size:15px; font-weight:600; color:var(--color-text-primary);">James Mitchell</div>
+        <div class="avatar-label">Eagle Member</div>
+      </div>
+    </div>
+
+    <form>
+      <div class="form-group">
+        <label class="form-label" for="full-name">Full Name</label>
+        <input class="form-input" id="full-name" type="text" value="James Mitchell" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" id="email" type="email" value="james.mitchell@email.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone</label>
+        <input class="form-input" id="phone" type="tel" value="+1 (555) 000-0000" autocomplete="tel" />
+      </div>
+
+      <div class="form-actions">
+        <a class="btn-ghost" href="dashboard.html">Cancel</a>
+        <button class="btn-primary" type="submit">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const moonSVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  const sunSVG  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+  const root = document.documentElement;
+  if (localStorage.getItem('golf-room-theme') === 'dark') root.setAttribute('data-theme', 'dark');
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('theme-toggle');
+    if (localStorage.getItem('golf-room-theme') === 'dark') toggle.innerHTML = sunSVG;
+    toggle.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        toggle.innerHTML = moonSVG;
+        localStorage.setItem('golf-room-theme', 'light');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        toggle.innerHTML = sunSVG;
+        localStorage.setItem('golf-room-theme', 'dark');
+      }
+    });
+  });
+</script>
+
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+
+</body>
+</html>
