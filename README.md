@@ -31,7 +31,6 @@ open index.html
 |------|-------|-------------|
 | `pages/landing.html` | `/` | Marketing homepage — hero, features, membership, testimonials, auth modal |
 | `pages/bays.html` | `/bays` | Bay browser — filter bar, 2-col grid, detail sidebar |
-| `pages/booking.html` | `/book` | Full 3-step booking wizard (calendar → bay → review) |
 | `pages/booking-datetime.html` | `/book` | Step 1 detail — date/time picker with sidebar |
 | `pages/booking-confirm.html` | `/book/confirm` | Confirm & pay — session details + payment form |
 | `pages/dashboard.html` | `/dashboard` | Authenticated hub — stats, next session, history |
